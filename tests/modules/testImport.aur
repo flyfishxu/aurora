@@ -1,0 +1,11 @@
+// Test import statement
+import "mathlib"
+
+fn main() -> int {
+    printd(square(5.0))      // Should print 25
+    printd(cube(3.0))        // Should print 27
+    printd(add(10.0, 20.0))  // Should print 30
+    printd(multiply(4.0, 7.0)) // Should print 28
+    return 0
+}
+

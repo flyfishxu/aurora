@@ -1,0 +1,19 @@
+// Math library module
+// Provides common mathematical functions
+
+fn square(x: double) -> double {
+    return x * x
+}
+
+fn cube(x: double) -> double {
+    return x * x * x
+}
+
+fn add(a: double, b: double) -> double {
+    return a + b
+}
+
+fn multiply(a: double, b: double) -> double {
+    return a * b
+}
+

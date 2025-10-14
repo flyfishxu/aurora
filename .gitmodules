@@ -1,0 +1,3 @@
+[submodule "vscode-extension"]
+	path = vscode-extension
+	url = git@github.com:flyfishxu/aurora-vscode.git

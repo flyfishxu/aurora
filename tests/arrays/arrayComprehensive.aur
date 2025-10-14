@@ -1,0 +1,34 @@
+// Comprehensive array test
+// Tests various array operations and features
+
+
+fn main() -> int {
+    // Integer arrays
+    let nums = [1, 2, 3, 4, 5]
+    printd(nums[0])  // 1
+    printd(nums[4])  // 5
+    
+    // Array with expressions
+    let x: int = 10
+    let computed = [x, x * 2, x * 3]
+    printd(computed[0])  // 10
+    printd(computed[1])  // 20
+    printd(computed[2])  // 30
+    
+    // Nested array indexing with expressions
+    let idx: int = 2
+    printd(nums[idx])  // 3
+    
+    // Array operations with multiple indices
+    let a = [100, 200, 300]
+    let i: int = 0
+    let j: int = 1
+    printd(a[i] + a[j])  // 300
+    
+    // Double array
+    let doubles = [1.5, 2.5, 3.5]
+    printd(doubles[1])  // 2.5
+    
+    return 0
+}
+

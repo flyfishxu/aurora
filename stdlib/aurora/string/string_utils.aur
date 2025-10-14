@@ -1,0 +1,26 @@
+// AuroraLang Standard Library - String Utilities
+// Helper functions for working with strings
+
+// Note: String operations are currently limited as the language
+// doesn't yet have full string support. This file will be expanded
+// as string features are implemented.
+
+// Future functions:
+// - string concatenation
+// - string length
+// - substring
+// - string comparison
+// - to_upper / to_lower
+// - split / join
+// - trim
+// - contains / starts_with / ends_with
+// - replace
+// - char_at
+// - string formatting
+
+// Placeholder for future string implementations
+fn string_placeholder() -> void {
+    return
+}
+
+

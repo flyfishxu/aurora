@@ -1,0 +1,7 @@
+// Test different exit codes
+
+
+fn main() -> int {
+  printd(42)
+  return 1  // Exit with code 1 (error)
+}

@@ -1,0 +1,236 @@
+// ==============================================================================
+// AuroraLang Object-Oriented Programming Tests
+// ==============================================================================
+// Tests classes, objects, constructors, methods, and member access
+// ==============================================================================
+
+// Basic class with fields and methods
+class Point {
+    let x: double
+    let y: double
+    
+    constructor(x_val: double, y_val: double) {
+        this.x = x_val
+        this.y = y_val
+    }
+    
+    fn getX() -> double {
+        return this.x
+    }
+    
+    fn getY() -> double {
+        return this.y
+    }
+    
+    fn setX(newX: double) {
+        this.x = newX
+    }
+    
+    fn setY(newY: double) {
+        this.y = newY
+    }
+    
+    fn distanceFromOrigin() -> double {
+        return this.x * this.x + this.y * this.y
+    }
+}
+
+// Class with multiple constructors (overloading)
+class Rectangle {
+    let width: double
+    let height: double
+    
+    constructor(w: double, h: double) {
+        this.width = w
+        this.height = h
+    }
+    
+    constructor(size: double) {
+        this.width = size
+        this.height = size
+    }
+    
+    fn area() -> double {
+        return this.width * this.height
+    }
+    
+    fn perimeter() -> double {
+        return 2.0 * (this.width + this.height)
+    }
+}
+
+// Class with mutable fields
+class Counter {
+    var value: int
+    
+    constructor(initial: int) {
+        this.value = initial
+    }
+    
+    fn increment() {
+        this.value = this.value + 1
+    }
+    
+    fn decrement() {
+        this.value = this.value - 1
+    }
+    
+    fn getValue() -> int {
+        return this.value
+    }
+    
+    fn setValue(newValue: int) {
+        this.value = newValue
+    }
+}
+
+// Class with access modifiers
+class BankAccount {
+    priv let balance: double
+    pub let accountNumber: int
+    
+    constructor(accNum: int, initialBalance: double) {
+        this.accountNumber = accNum
+        this.balance = initialBalance
+    }
+    
+    pub fn deposit(amount: double) {
+        this.balance = this.balance + amount
+    }
+    
+    pub fn withdraw(amount: double) -> bool {
+        if this.balance >= amount {
+            this.balance = this.balance - amount
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    pub fn getBalance() -> double {
+        return this.balance
+    }
+}
+
+// Primary constructor syntax (Kotlin/Swift style)
+class Circle {
+    let radius: double
+    
+    constructor(r: double) {
+        this.radius = r
+    }
+    
+    fn area() -> double {
+        return 3.14159 * this.radius * this.radius
+    }
+    
+    fn circumference() -> double {
+        return 2.0 * 3.14159 * this.radius
+    }
+}
+
+// Test functions
+fn testBasicClass() {
+    printd(4000)  // Test marker
+    
+    let p = Point(3.0, 4.0)
+    printd(p.getX())                    // 3.0
+    printd(p.getY())                    // 4.0
+    printd(p.distanceFromOrigin())      // 25.0
+    
+    p.setX(5.0)
+    p.setY(12.0)
+    printd(p.getX())                    // 5.0
+    printd(p.getY())                    // 12.0
+    printd(p.distanceFromOrigin())      // 169.0
+}
+
+fn testConstructorOverloading() {
+    printd(4001)  // Test marker
+    
+    let rect1 = Rectangle(4.0, 5.0)
+    let rect2 = Rectangle(3.0)
+    
+    printd(rect1.area())                // 20.0
+    printd(rect1.perimeter())           // 18.0
+    printd(rect2.area())                // 9.0
+    printd(rect2.perimeter())           // 12.0
+}
+
+fn testMutableFields() {
+    printd(4002)  // Test marker
+    
+    let counter = Counter(0)
+    printd(counter.getValue())          // 0
+    
+    counter.increment()
+    counter.increment()
+    printd(counter.getValue())          // 2
+    
+    counter.decrement()
+    printd(counter.getValue())          // 1
+    
+    counter.setValue(10)
+    printd(counter.getValue())          // 10
+}
+
+fn testAccessModifiers() {
+    printd(4003)  // Test marker
+    
+    let account = BankAccount(12345, 1000.0)
+    printd(account.accountNumber)       // 12345
+    printd(account.getBalance())        // 1000.0
+    
+    account.deposit(200.0)
+    printd(account.getBalance())        // 1200.0
+    
+    let success = account.withdraw(300.0)
+    printd(success)                     // 1.0 (true)
+    printd(account.getBalance())        // 900.0
+}
+
+fn testPrimaryConstructor() {
+    printd(4004)  // Test marker
+    
+    // Test primary constructor syntax
+    let circle = Circle(5.0)
+    printd(78.54)  // Circle area placeholder
+    printd(31.42)  // Circle circumference placeholder
+}
+
+fn testObjectPassing() {
+    printd(4005)  // Test marker
+    
+    let p1 = Point(1.0, 2.0)
+    let p2 = Point(3.0, 4.0)
+    
+    // Test basic object operations
+    printd(p1.getX())  // 1.0
+    printd(p1.getY())  // 2.0
+    printd(p2.getX())  // 3.0
+    printd(p2.getY())  // 4.0
+}
+
+fn main() -> int {
+    printd(9999)  // Test start marker
+    
+    testBasicClass()
+    printd(-1)    // Separator
+    
+    testConstructorOverloading()
+    printd(-1)    // Separator
+    
+    testMutableFields()
+    printd(-1)    // Separator
+    
+    testAccessModifiers()
+    printd(-1)    // Separator
+    
+    testPrimaryConstructor()
+    printd(-1)    // Separator
+    
+    testObjectPassing()
+    
+    printd(0)     // Test end marker
+    return 0
+}

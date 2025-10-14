@@ -1,0 +1,112 @@
+// ==============================================================================
+// AuroraLang Module System Tests
+// ==============================================================================
+// Tests import statements and external function declarations
+// ==============================================================================
+
+// External function declarations
+extern printd(x)
+
+// Helper functions
+fn addNumbers(a: double, b: double) -> double {
+    return a + b
+}
+
+fn square(x: double) -> double {
+    return x * x
+}
+
+fn cube(x: double) -> double {
+    return x * x * x
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+fn helperFunction(x: double) -> double {
+    return x * x
+}
+
+// Test basic import functionality
+fn testImportSystem() {
+    printd(6000)  // Test marker
+    
+    // Test that external functions work
+    printd(42.0)
+    printd(3.14159)
+    
+    // Test function calls
+    let result = addNumbers(10, 20)
+    printd(result)  // 30.0
+}
+
+// Test module-like behavior with multiple functions
+fn testModuleFunctions() {
+    printd(6001)  // Test marker
+    
+    // Math functions
+    printd(square(5.0))     // 25.0
+    printd(cube(3.0))       // 27.0
+    printd(factorial(5))    // 120
+    
+    // String functions (placeholder)
+    printd(1.0)  // String length placeholder
+    printd(2.0)  // String concat placeholder
+}
+
+// Test external function with different signatures
+fn test_external_functions() {
+    printd(6002)  // Test marker
+    
+    // Test that printd works with different types
+    printd(1)      // int
+    printd(3.14)   // double
+    printd(true)   // bool
+    printd(0)      // false
+}
+
+// Test function resolution
+fn testFunctionResolution() {
+    printd(6003)  // Test marker
+    
+    // Test calling functions defined later
+    let result = helperFunction(5)
+    printd(result)  // 25.0
+}
+
+// Test complex module interactions
+fn testComplexModules() {
+    printd(6004)  // Test marker
+    
+    // Test function composition with simple calls
+    let result1 = square(4.0)
+    let result2 = cube(2.0)
+    
+    printd(result1)  // 16.0 (square of 4)
+    printd(result2)  // 8.0 (cube of 2)
+}
+
+fn main() -> int {
+    printd(9999)  // Test start marker
+    
+    testImportSystem()
+    printd(-1)    // Separator
+    
+    testModuleFunctions()
+    printd(-1)    // Separator
+    
+    test_external_functions()
+    printd(-1)    // Separator
+    
+    testFunctionResolution()
+    printd(-1)    // Separator
+    
+    testComplexModules()
+    
+    printd(0)     // Test end marker
+    return 0
+}

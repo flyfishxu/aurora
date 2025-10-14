@@ -1,0 +1,159 @@
+// AuroraLang Standard Library - Math
+// Mathematical functions and constants
+
+// Constants
+// let PI = 3.141592653589793
+// let E = 2.718281828459045
+
+// Absolute value for integers
+fn abs_int(x: int) -> int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+// Absolute value for doubles
+fn abs_double(x: double) -> double {
+    if x < 0.0 {
+        return -x
+    }
+    return x
+}
+
+// Minimum of two integers
+fn min_int(a: int, b: int) -> int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+// Maximum of two integers
+fn max_int(a: int, b: int) -> int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+// Minimum of two doubles
+fn min_double(a: double, b: double) -> double {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+// Maximum of two doubles
+fn max_double(a: double, b: double) -> double {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+// Power function for integers (base^exponent)
+fn pow_int(base: int, exponent: int) -> int {
+    if exponent == 0 {
+        return 1
+    }
+    
+    var result = 1
+    var exp = exponent
+    var b = base
+    
+    while exp > 0 {
+        if exp % 2 == 1 {
+            result = result * b
+        }
+        b = b * b
+        exp = exp / 2
+    }
+    
+    return result
+}
+
+// Factorial function
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+// Greatest common divisor (Euclidean algorithm)
+fn gcd(a: int, b: int) -> int {
+    var x = a
+    var y = b
+    
+    while y != 0 {
+        let temp = y
+        y = x % y
+        x = temp
+    }
+    
+    return x
+}
+
+// Least common multiple
+fn lcm(a: int, b: int) -> int {
+    if a == 0 || b == 0 {
+        return 0
+    }
+    return (a * b) / gcd(a, b)
+}
+
+// Check if a number is prime
+fn is_prime(n: int) -> bool {
+    if n <= 1 {
+        return false
+    }
+    if n <= 3 {
+        return true
+    }
+    if n % 2 == 0 || n % 3 == 0 {
+        return false
+    }
+    
+    var i = 5
+    while i * i <= n {
+        if n % i == 0 || n % (i + 2) == 0 {
+            return false
+        }
+        i = i + 6
+    }
+    
+    return true
+}
+
+// Simple square root approximation using Newton's method
+fn sqrt_approx(x: double) -> double {
+    if x < 0.0 {
+        return 0.0  // Error case
+    }
+    if x == 0.0 {
+        return 0.0
+    }
+    
+    var guess = x / 2.0
+    let epsilon = 0.00001
+    
+    var i = 0
+    while i < 100 {  // Max 100 iterations
+        let next_guess = (guess + x / guess) / 2.0
+        let diff = guess - next_guess
+        let abs_diff = diff < 0.0 ? -diff : diff
+        
+        if abs_diff < epsilon {
+            return next_guess
+        }
+        
+        guess = next_guess
+        i = i + 1
+    }
+    
+    return guess
+}
+
+

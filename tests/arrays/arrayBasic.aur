@@ -1,0 +1,19 @@
+// Basic array functionality test
+// Tests array creation, indexing, and basic operations
+
+
+fn main() -> int {
+    // Create an array
+    let arr = [10, 20, 30, 40, 50]
+    
+    // Access elements
+    printd(arr[0])  // Should print 10
+    printd(arr[2])  // Should print 30
+    printd(arr[4])  // Should print 50
+    
+    // Use array elements in expressions
+    printd(arr[1] + arr[3])  // Should print 60 (20 + 40)
+    
+    return 0
+}
+

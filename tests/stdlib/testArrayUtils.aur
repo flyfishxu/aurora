@@ -1,0 +1,58 @@
+// Test stdlib array utility functions
+import "../../stdlib/aurora/collections/array_utils"
+
+fn main() -> int {
+    // Create test array
+    let arr = [5, 2, 8, 1, 9, 3]
+    let len = 6
+    
+    // Test min and max
+    printd(min_int_array(arr, len))    // 1
+    printd(max_int_array(arr, len))    // 9
+    
+    // Test contains
+    printd(contains_int(arr, len, 8))  // 1 (true)
+    printd(contains_int(arr, len, 10)) // 0 (false)
+    
+    // Test index_of
+    printd(index_of_int(arr, len, 8))  // 2
+    printd(index_of_int(arr, len, 10)) // -1
+    
+    // Test count
+    let arr2 = [1, 2, 3, 2, 4, 2]
+    printd(count_int(arr2, 6, 2))      // 3
+    printd(count_int(arr2, 6, 5))      // 0
+    
+    // Test is_sorted
+    let sorted_arr = [1, 2, 3, 4, 5]
+    printd(is_sorted_int(sorted_arr, 5))  // 1 (true)
+    printd(is_sorted_int(arr, len))       // 0 (false)
+    
+    // Test bubble_sort
+    let arr3 = [5, 2, 8, 1, 9]
+    bubble_sort_int(arr3, 5)
+    printd(arr3[0])  // 1
+    printd(arr3[1])  // 2
+    printd(arr3[2])  // 5
+    printd(arr3[3])  // 8
+    printd(arr3[4])  // 9
+    
+    // Test reverse
+    let arr4 = [1, 2, 3, 4, 5]
+    reverse_int_array(arr4, 5)
+    printd(arr4[0])  // 5
+    printd(arr4[1])  // 4
+    printd(arr4[2])  // 3
+    printd(arr4[3])  // 2
+    printd(arr4[4])  // 1
+    
+    // Test binary search (on sorted array)
+    let sorted = [1, 3, 5, 7, 9, 11, 13]
+    printd(binary_search_int(sorted, 7, 7))   // 3
+    printd(binary_search_int(sorted, 7, 1))   // 0
+    printd(binary_search_int(sorted, 7, 13))  // 6
+    printd(binary_search_int(sorted, 7, 10))  // -1
+    
+    return 0
+}
+

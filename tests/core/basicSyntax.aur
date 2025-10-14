@@ -1,0 +1,84 @@
+// ==============================================================================
+// AuroraLang Core Syntax Tests
+// ==============================================================================
+// Tests basic language features: functions, operators, expressions
+// ==============================================================================
+
+// Basic arithmetic operations
+fn add(a: double, b: double) -> double {
+    return a + b
+}
+
+fn subtract(a: double, b: double) -> double {
+    return a - b
+}
+
+fn multiply(a: double, b: double) -> double {
+    return a * b
+}
+
+fn divide(a: double, b: double) -> double {
+    return a / b
+}
+
+// Comparison operations
+fn isLess(a: double, b: double) -> double {
+    return a < b  // Returns 1.0 if true, 0.0 if false
+}
+
+// Operator precedence test
+fn precedenceTest() -> double {
+    return 2 + 3 * 4  // Should be 14, not 20
+}
+
+// Parentheses test
+fn parenthesesTest() -> double {
+    return (2 + 3) * 4  // Should be 20
+}
+
+// Complex expression
+fn complexExpression(x: double, y: double, z: double) -> double {
+    return (x + y) * z - x / y
+}
+
+// Function with no parameters
+fn getConstant() -> double {
+    return 42.0
+}
+
+// Function with no return type (void)
+fn printHello() {
+    printd(1.0)
+    printd(2.0)
+    printd(3.0)
+}
+
+fn main() -> int {
+    // Basic arithmetic tests
+    printd(add(10.0, 5.0))           // 15.0
+    printd(subtract(10.0, 5.0))      // 5.0
+    printd(multiply(10.0, 5.0))      // 50.0
+    printd(divide(10.0, 5.0))        // 2.0
+    
+    // Comparison tests
+    printd(isLess(5.0, 10.0))       // 1.0 (true)
+    printd(isLess(10.0, 5.0))       // 0.0 (false)
+    printd(isLess(5.0, 5.0))        // 0.0 (false)
+    
+    // Precedence tests
+    printd(precedenceTest())        // 14.0
+    printd(parenthesesTest())       // 20.0
+    
+    // Complex expression test
+    printd(complexExpression(2.0, 3.0, 4.0))  // 19.333...
+    
+    // Function call tests
+    printd(getConstant())           // 42.0
+    printHello()                    // 1.0, 2.0, 3.0
+    
+    // Floating-point precision test
+    printd(add(3.14159, 2.85841))    // 6.0
+    printd(divide(22.0, 7.0))        // 3.14286...
+    
+    return 0
+}

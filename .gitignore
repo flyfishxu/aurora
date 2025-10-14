@@ -1,0 +1,34 @@
+# AI Coding
+.cursor/
+AGENTS.md
+
+# Build directory
+build/
+.cache/
+
+# Compiled object files
+*.o
+*.a
+*.dylib
+*.so
+
+# Generated LLVM IR
+*.ll
+*.bc
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+
+# Temporary files
+*.tmp
+*.log

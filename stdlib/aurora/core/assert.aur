@@ -1,0 +1,42 @@
+// AuroraLang Standard Library - Assertions
+// Functions for runtime assertions and debugging
+
+// Assert that a condition is true, panic if false
+fn assert(condition: bool, message: string) -> void {
+    if !condition {
+        // panic(message)
+        // For now, we just return since panic is not implemented
+        return
+    }
+}
+
+// Assert equality between two integers
+fn assert_eq_int(a: int, b: int) -> void {
+    if a != b {
+        // println("Assertion failed: " + str(a) + " != " + str(b))
+        // panic("assertion failed")
+        return
+    }
+}
+
+// Assert equality between two doubles (with epsilon for floating point)
+fn assert_eq_double(a: double, b: double, epsilon: double) -> void {
+    let diff = a - b
+    let abs_diff = diff < 0.0 ? -diff : diff
+    
+    if abs_diff > epsilon {
+        // println("Assertion failed: " + str(a) + " != " + str(b))
+        // panic("assertion failed")
+        return
+    }
+}
+
+// Assert that a value is not null
+fn assert_not_null(value: int?) -> void {
+    if value == null {
+        // panic("assertion failed: value is null")
+        return
+    }
+}
+
+

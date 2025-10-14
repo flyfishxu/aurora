@@ -1,0 +1,193 @@
+// ==============================================================================
+// AuroraLang Design Patterns Tests
+// ==============================================================================
+// Tests common design patterns: Singleton, Factory, Builder
+// ==============================================================================
+
+// Singleton Pattern (conceptual - using single shared instance)
+class ConfigManager {
+    let appId: int
+    let maxConnections: int
+    let isDebugMode: bool
+    
+    constructor(id: int, connections: int, debug: bool) {
+        this.appId = id
+        this.maxConnections = connections
+        this.isDebugMode = debug
+    }
+    
+    fn getAppId() -> int {
+        return this.appId
+    }
+    
+    fn getMaxConnections() -> int {
+        return this.maxConnections
+    }
+    
+    fn isDebug() -> bool {
+        return this.isDebugMode
+    }
+    
+    fn setMaxConnections(max: int) {
+        this.maxConnections = max
+    }
+    
+    fn displayConfig() {
+        printd(1.0)  // App id marker
+        printd(this.maxConnections)
+        printd(this.isDebugMode ? 1.0 : 0.0)
+    }
+}
+
+// Simple Person class
+class Person {
+    let id: int
+    let age: int
+    let isActive: bool
+    
+    constructor(id: int, age: int, active: bool) {
+        this.id = id
+        this.age = age
+        this.isActive = active
+    }
+    
+    fn getId() -> int {
+        return this.id
+    }
+    
+    fn getAge() -> int {
+        return this.age
+    }
+    
+    fn isActive() -> bool {
+        return this.isActive
+    }
+    
+    fn display() {
+        printd(2.0)  // Person marker
+        printd(this.age)
+        printd(this.isActive ? 1.0 : 0.0)
+    }
+}
+
+// Circle class for factory pattern
+class Circle {
+    let radius: double
+    
+    constructor(r: double) {
+        this.radius = r
+    }
+    
+    fn area() -> double {
+        return 3.14159 * this.radius * this.radius
+    }
+}
+
+// Rectangle class for factory pattern
+class Rectangle {
+    let width: double
+    let height: double
+    
+    constructor(w: double, h: double) {
+        this.width = w
+        this.height = h
+    }
+    
+    fn area() -> double {
+        return this.width * this.height
+    }
+}
+
+// Factory Pattern
+class ShapeFactory {
+    fn createCircle(radius: double) -> Circle {
+        return Circle(radius)
+    }
+    
+    fn createRectangle(width: double, height: double) -> Rectangle {
+        return Rectangle(width, height)
+    }
+    
+    fn createSquare(size: double) -> Rectangle {
+        return Rectangle(size, size)
+    }
+}
+
+// Logger class for singleton test
+class Logger {
+    let prefix: double
+    
+    constructor() {
+        this.prefix = 999.0
+    }
+    
+    fn log(value: double) {
+        printd(this.prefix)
+        printd(value)
+    }
+}
+
+// Test functions
+fn testSingletonPattern() {
+    printd(5000)  // Test marker
+    
+    // Create single shared instance (Singleton concept)
+    let config = ConfigManager(1, 100, true)
+    
+    // Use in different contexts
+    printd(config.getMaxConnections())  // 100
+    config.displayConfig()
+    
+    // Modify the singleton
+    config.setMaxConnections(200)
+    printd(config.getMaxConnections())  // 200
+}
+
+fn testFactoryPattern() {
+    printd(5001)  // Test marker
+    
+    let factory = ShapeFactory()
+    
+    let circle = factory.createCircle(5.0)
+    let rectangle = factory.createRectangle(4.0, 6.0)
+    let square = factory.createSquare(3.0)
+    
+    printd(circle.area())      // ~78.54
+    printd(rectangle.area())   // 24.0
+    printd(square.area())      // 9.0
+}
+
+fn testBuilderPattern() {
+    printd(5002)  // Test marker
+    
+    let person = Person(1, 30, true)
+    person.display()
+}
+
+fn testObjectSingleton() {
+    printd(5003)  // Test marker
+    
+    // Test singleton-like behavior with simple class
+    let logger = Logger()
+    logger.log(1.0)
+    logger.log(2.0)
+    logger.log(3.0)
+}
+
+fn main() -> int {
+    printd(9999)  // Test start marker
+    
+    testSingletonPattern()
+    printd(-1)    // Separator
+    
+    testFactoryPattern()
+    printd(-1)    // Separator
+    
+    testBuilderPattern()
+    printd(-1)    // Separator
+    
+    testObjectSingleton()
+    
+    printd(0)     // Test end marker
+    return 0
+}

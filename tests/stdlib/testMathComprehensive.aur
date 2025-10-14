@@ -1,0 +1,46 @@
+// Comprehensive test for stdlib math functions
+import "../../stdlib/aurora/math/math"
+
+fn main() -> int {
+    printd(1000)  // Start marker
+    
+    // Test abs functions
+    printd(abs_int(5))
+    printd(abs_int(-10))
+    printd(abs_double(3.5))
+    printd(abs_double(-7.2))
+    
+    // Test min/max
+    printd(min_int(10, 20))
+    printd(max_int(10, 20))
+    printd(min_double(5.5, 3.3))
+    printd(max_double(5.5, 3.3))
+    
+    // Test power
+    printd(pow_int(2, 3))
+    printd(pow_int(5, 0))
+    printd(pow_int(3, 4))
+    
+    // Test factorial
+    printd(factorial(5))
+    printd(factorial(7))
+    
+    // Test GCD and LCM
+    printd(gcd(48, 18))
+    printd(lcm(12, 18))
+    
+    // Test prime check
+    printd(is_prime(2))
+    printd(is_prime(17))
+    printd(is_prime(4))
+    printd(is_prime(29))
+    
+    // Test sqrt
+    printd(sqrt_approx(4.0))
+    printd(sqrt_approx(9.0))
+    printd(sqrt_approx(25.0))
+    
+    printd(9999)  // End marker
+    return 0
+}
+

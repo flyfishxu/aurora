@@ -1,0 +1,146 @@
+// ==============================================================================
+// AuroraLang Control Flow Tests
+// ==============================================================================
+// Tests if/else statements, loops, break/continue
+// ==============================================================================
+
+// If-else statements
+fn testIfElse() {
+    let x: double = 10.0
+    let y: double = 5.0
+    
+    if x > y {
+        printd(1.0)  // Should print
+    } else {
+        printd(0.0)
+    }
+    
+    if x < y {
+        printd(0.0)
+    } else {
+        printd(1.0)  // Should print
+    }
+    
+    // Nested if-else
+    if x > 0 {
+        if y > 0 {
+            printd(1.0)  // Should print
+        } else {
+            printd(0.0)
+        }
+    } else {
+        printd(0.0)
+    }
+}
+
+// While loop
+fn testWhileLoop() {
+    let i: int = 0
+    while i < 5 {
+        printd(i)
+        i = i + 1
+    }
+    // Should print: 0, 1, 2, 3, 4
+}
+
+// For loop (range-based)
+fn testForLoop() {
+    for i in 0..5 {
+        printd(i)
+    }
+    // Should print: 0, 1, 2, 3, 4
+    
+    // For loop with expressions
+    let start: int = 2
+    let end: int = 7
+    for i in start..end {
+        printd(i)
+    }
+    // Should print: 2, 3, 4, 5, 6
+}
+
+// Loop with break
+fn testLoopWithBreak() {
+    let count: int = 0
+    loop {
+        printd(count)
+        count = count + 1
+        if count >= 3 {
+            break
+        }
+    }
+    // Should print: 0, 1, 2
+}
+
+// Loop with continue
+fn testLoopWithContinue() {
+    for i in 0..6 {
+        if i % 2 == 0 {
+            continue  // Skip even numbers
+        }
+        printd(i)
+    }
+    // Should print: 1, 3, 5
+}
+
+// Nested loops
+fn testNestedLoops() {
+    for i in 0..3 {
+        for j in 0..3 {
+            if j == 1 {
+                break  // Only breaks inner loop
+            }
+            printd(i * 10 + j)
+        }
+    }
+    // Should print: 0, 20, 10
+}
+
+// Complex control flow
+fn testComplexFlow() {
+    let sum: int = 0
+    let count: int = 0
+    
+    for i in 1..10 {
+        if i % 2 == 0 {
+            continue  // Skip even numbers
+        }
+        
+        sum = sum + i
+        count = count + 1
+        
+        if count >= 3 {
+            break  // Stop after 3 odd numbers
+        }
+    }
+    
+    printd(sum)   // Should be 1 + 3 + 5 = 9
+    printd(count) // Should be 3
+}
+
+fn main() -> int {
+    printd(2000)  // Test start marker
+    
+    testIfElse()
+    printd(-1)    // Separator
+    
+    testWhileLoop()
+    printd(-1)    // Separator
+    
+    testForLoop()
+    printd(-1)    // Separator
+    
+    testLoopWithBreak()
+    printd(-1)    // Separator
+    
+    testLoopWithContinue()
+    printd(-1)    // Separator
+    
+    testNestedLoops()
+    printd(-1)    // Separator
+    
+    testComplexFlow()
+    
+    printd(0)     // Test end marker
+    return 0
+}

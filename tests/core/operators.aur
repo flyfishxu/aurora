@@ -1,0 +1,103 @@
+// ==============================================================================
+// AuroraLang Operators Tests
+// ==============================================================================
+// Tests all supported operators: arithmetic, comparison, bitwise, ternary
+// ==============================================================================
+
+// Arithmetic operators
+fn testArithmetic() {
+    let a: int = 10
+    let b: int = 3
+    
+    printd(a + b)    // 13
+    printd(a - b)    // 7
+    printd(a * b)    // 30
+    printd(a / b)    // 3 (integer division)
+    printd(a % b)    // 1 (modulo)
+}
+
+// Comparison operators
+fn testComparison() {
+    let x: double = 5.0
+    let y: double = 3.0
+    
+    printd(x < y)    // 0.0 (false)
+    printd(x > y)    // 1.0 (true)
+    printd(x <= y)   // 0.0 (false)
+    printd(x >= y)   // 1.0 (true)
+    printd(x == y)   // 0.0 (false)
+    printd(x != y)   // 1.0 (true)
+}
+
+// Logical operators
+fn testLogical() {
+    let p: bool = true
+    let q: bool = false
+    
+    printd(p && q)   // 0.0 (false)
+    printd(p || q)   // 1.0 (true)
+    printd(!p)       // 0.0 (false)
+    printd(!q)       // 1.0 (true)
+}
+
+// Bitwise operators
+fn testBitwise() {
+    let x: int = 15  // 1111 in binary
+    let y: int = 7   // 0111 in binary
+    
+    printd(x & y)    // 7 (0111)
+    printd(x | y)    // 15 (1111)
+    printd(x ^ y)    // 8 (1000)
+    printd(~x)       // -16 (two's complement)
+    printd(x << 1)   // 30 (11110)
+    printd(x >> 1)   // 7 (0111)
+}
+
+// Ternary operator
+fn testTernary() {
+    let a: int = 5
+    let b: int = 3
+    let max = a > b ? a : b
+    printd(max)      // 5
+    
+    let grade: int = 85
+    let letter = grade >= 90 ? 4 : (grade >= 80 ? 3 : (grade >= 70 ? 2 : 1))
+    printd(letter)   // 3
+}
+
+// Operator precedence test
+fn testPrecedence() {
+    let result1 = 2 + 3 * 4        // 14
+    let result2 = (2 + 3) * 4      // 20
+    let result3 = 2 * 3 + 4 * 5    // 26
+    let result4 = 2 * (3 + 4) * 5  // 70
+    
+    printd(result1)
+    printd(result2)
+    printd(result3)
+    printd(result4)
+}
+
+fn main() -> int {
+    printd(1000)  // Test start marker
+    
+    testArithmetic()
+    printd(-1)    // Separator
+    
+    testComparison()
+    printd(-1)    // Separator
+    
+    testLogical()
+    printd(-1)    // Separator
+    
+    testBitwise()
+    printd(-1)    // Separator
+    
+    testTernary()
+    printd(-1)    // Separator
+    
+    testPrecedence()
+    
+    printd(0)     // Test end marker
+    return 0
+}

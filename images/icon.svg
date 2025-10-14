@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img">
+  <defs>
+    <style>
+      .left { fill:#10B981; }
+      .right{ fill:#06B6D4; }
+    </style>
+    <mask id="cut">
+      <rect x="0" y="0" width="128" height="128" fill="white"/>
+      <polygon points="64,48 84,92 44,92" fill="black"/>
+      <rect x="44" y="68" width="40" height="8" rx="4" fill="black"/>
+    </mask>
+  </defs>
+
+  <g mask="url(#cut)">
+    <polygon class="left" points="64,20 27,100 45,100 72,44"/>
+    <polygon class="right" points="64,20 101,100 83,100 56,44"/>
+  </g>
+</svg>

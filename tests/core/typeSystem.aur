@@ -1,0 +1,146 @@
+// ==============================================================================
+// AuroraLang Type System Tests
+// ==============================================================================
+// Tests type annotations, conversions, literals, and type safety
+// ==============================================================================
+
+// Type annotations
+fn testTypeAnnotations() {
+    let x: int = 42
+    let y: double = 3.14159
+    let flag: bool = true
+    let text: string = "hello"
+    
+    printd(x)      // 42
+    printd(y)      // 3.14159
+    printd(flag)   // 1.0 (true)
+    printd(1.0)    // String printing not fully implemented yet
+}
+
+// Type conversions
+fn testTypeConversions() {
+    let intVal: int = 42
+    let doubleVal: double = 3.14
+    let boolVal: bool = true
+    
+    // Implicit conversions
+    let result1: double = intVal      // int to double
+    let result2: int = doubleVal      // double to int (truncated)
+    let result3: double = boolVal     // bool to double
+    
+    printd(result1)  // 42.0
+    printd(result2)  // 3 (truncated)
+    printd(result3)  // 1.0
+}
+
+// Boolean literals and operations
+fn testBooleanLiterals() {
+    let t: bool = true
+    let f: bool = false
+    
+    printd(t)       // 1.0
+    printd(f)       // 0.0
+    printd(!t)      // 0.0
+    printd(!f)      // 1.0
+    printd(t && f)  // 0.0
+    printd(t || f)  // 1.0
+}
+
+// Null handling
+fn testNullHandling() {
+    let x = null
+    let optionalName: string? = null
+    let optionalNumber: int? = null
+    
+    if optionalName == null {
+        printd(1.0)
+    }
+    
+    if optionalNumber != null {
+        printd(2.0)
+    } else {
+        printd(3.0)
+    }
+}
+
+// Type inference
+fn testTypeInference() {
+    // Type should be inferred from initializer
+    let x = 42      // inferred as int
+    let y = 3.14    // inferred as double
+    let flag = true // inferred as bool
+    
+    printd(x)
+    printd(y)
+    printd(flag)
+}
+
+// Helper functions
+fn addNumbers(a: int, b: int) -> double {
+    return a + b
+}
+
+fn printVoidTest() {
+    printd(100.0)
+    printd(200.0)
+    // No return statement needed for void functions
+}
+
+// Function return types
+fn testFunctionReturnTypes() {
+    // Function with explicit return type
+    let result1: double = addNumbers(10, 20)
+    printd(result1)  // 30.0
+    
+    // Function with void return type
+    printVoidTest()
+}
+
+// Type safety tests
+fn testTypeSafety() {
+    let x: int = 5
+    let y: double = 3.14
+    
+    // Mixed type operations should work with implicit conversion
+    let result: double = x + y  // int + double = double
+    printd(result)  // 8.14
+    
+    let isLess: bool = x < 10
+    printd(isLess)  // 1.0
+}
+
+// Array type tests (if supported)
+fn testArrayTypes() {
+    // Note: Array support may vary by implementation
+    printd(1.0)  // Placeholder for array tests
+}
+
+fn main() -> int {
+    printd(3000)  // Test start marker
+    
+    testTypeAnnotations()
+    printd(-1)    // Separator
+    
+    testTypeConversions()
+    printd(-1)    // Separator
+    
+    testBooleanLiterals()
+    printd(-1)    // Separator
+    
+    testNullHandling()
+    printd(-1)    // Separator
+    
+    testTypeInference()
+    printd(-1)    // Separator
+    
+    testFunctionReturnTypes()
+    printd(-1)    // Separator
+    
+    testTypeSafety()
+    printd(-1)    // Separator
+    
+    testArrayTypes()
+    
+    printd(0)     // Test end marker
+    return 0
+}

@@ -1,0 +1,262 @@
+// ==============================================================================
+// AuroraLang Object-Oriented Programming Demo
+// ==============================================================================
+// This file demonstrates the new OOP features in AuroraLang:
+// - Class definitions
+// - Fields (member variables)
+// - Methods (member functions)
+// - Constructors
+// - Object creation with 'new'
+// - Member access with dot notation
+// - 'this' keyword
+// ==============================================================================
+
+
+// ==============================================================================
+// Example 1: Simple Counter Class
+// ==============================================================================
+
+class Counter {
+    // Private fields
+    let value: int
+    
+    // Constructor
+    constructor(initial: int) {
+        this.value = initial
+    }
+    
+    // Methods
+    fn increment() {
+        this.value = this.value + 1
+    }
+    
+    fn decrement() {
+        this.value = this.value - 1
+    }
+    
+    fn getValue() -> int {
+        return this.value
+    }
+    
+    fn setValue(newValue: int) {
+        this.value = newValue
+    }
+}
+
+fn testCounter() {
+    printd(1000)  // Section marker
+    
+    // Create a counter object
+    let counter = Counter(0)
+    
+    // Use the counter
+    printd(counter.getValue())  // Should print 0
+    
+    counter.increment()
+    printd(counter.getValue())  // Should print 1
+    
+    counter.increment()
+    counter.increment()
+    printd(counter.getValue())  // Should print 3
+    
+    counter.decrement()
+    printd(counter.getValue())  // Should print 2
+    
+    counter.setValue(10)
+    printd(counter.getValue())  // Should print 10
+}
+
+// ==============================================================================
+// Example 2: Point Class (2D Coordinates)
+// ==============================================================================
+
+class Point {
+    let x: double
+    let y: double
+    
+    constructor(x_val: double, y_val: double) {
+        this.x = x_val
+        this.y = y_val
+    }
+    
+    fn getX() -> double {
+        return this.x
+    }
+    
+    fn getY() -> double {
+        return this.y
+    }
+    
+    fn setX(newX: double) {
+        this.x = newX
+    }
+    
+    fn setY(newY: double) {
+        this.y = newY
+    }
+    
+    fn distanceFromOrigin() -> double {
+        // Calculate sqrt(x^2 + y^2)
+        let xSquared = this.x * this.x
+        let ySquared = this.y * this.y
+        // For now, return x^2 + y^2 (actual sqrt would need external function)
+        return xSquared + ySquared
+    }
+}
+
+fn testPoint() {
+    printd(2000)  // Section marker
+    
+    // Create a point
+    let p = Point(3.0, 4.0)
+    
+    printd(p.getX())  // Should print 3.0
+    printd(p.getY())  // Should print 4.0
+    
+    // Calculate distance from origin (squared)
+    printd(p.distanceFromOrigin())  // Should print 25.0 (3^2 + 4^2)
+    
+    // Move the point
+    p.setX(5.0)
+    p.setY(12.0)
+    printd(p.getX())  // Should print 5.0
+    printd(p.getY())  // Should print 12.0
+    printd(p.distanceFromOrigin())  // Should print 169.0 (5^2 + 12^2)
+}
+
+// ==============================================================================
+// Example 3: Rectangle Class
+// ==============================================================================
+
+class Rectangle {
+    let width: double
+    let height: double
+    
+    constructor(w: double, h: double) {
+        this.width = w
+        this.height = h
+    }
+    
+    fn getWidth() -> double {
+        return this.width
+    }
+    
+    fn getHeight() -> double {
+        return this.height
+    }
+    
+    fn area() -> double {
+        return this.width * this.height
+    }
+    
+    fn perimeter() -> double {
+        return 2.0 * (this.width + this.height)
+    }
+    
+    fn scale(factor: double) {
+        this.width = this.width * factor
+        this.height = this.height * factor
+    }
+}
+
+fn testRectangle() {
+    printd(3000)  // Section marker
+    
+    // Create a rectangle
+    let rect = Rectangle(4.0, 5.0)
+    
+    printd(rect.getWidth())   // Should print 4.0
+    printd(rect.getHeight())  // Should print 5.0
+    printd(rect.area())       // Should print 20.0
+    printd(rect.perimeter())  // Should print 18.0
+    
+    // Scale the rectangle
+    rect.scale(2.0)
+    printd(rect.getWidth())   // Should print 8.0
+    printd(rect.getHeight())  // Should print 10.0
+    printd(rect.area())       // Should print 80.0
+}
+
+// ==============================================================================
+// Example 4: Bank Account Class
+// ==============================================================================
+
+class BankAccount {
+    let balance: double
+    let accountNumber: int
+    
+    constructor(accNum: int, initialBalance: double) {
+        this.accountNumber = accNum
+        this.balance = initialBalance
+    }
+    
+    fn deposit(amount: double) {
+        this.balance = this.balance + amount
+    }
+    
+    fn withdraw(amount: double) -> bool {
+        if this.balance >= amount {
+            this.balance = this.balance - amount
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    fn getBalance() -> double {
+        return this.balance
+    }
+    
+    fn getAccountNumber() -> int {
+        return this.accountNumber
+    }
+}
+
+fn testBankAccount() {
+    printd(4000)  // Section marker
+    
+    // Create a bank account
+    let account = BankAccount(12345, 1000.0)
+    
+    printd(account.getAccountNumber())  // Should print 12345
+    printd(account.getBalance())        // Should print 1000.0
+    
+    // Deposit money
+    account.deposit(500.0)
+    printd(account.getBalance())  // Should print 1500.0
+    
+    // Withdraw money
+    account.withdraw(300.0)
+    printd(account.getBalance())  // Should print 1200.0
+    
+    // Try to withdraw more than balance
+    let success = account.withdraw(2000.0)
+    printd(success)  // Should print 0 (false)
+    printd(account.getBalance())  // Should still print 1200.0
+}
+
+// ==============================================================================
+// Main Test Runner
+// ==============================================================================
+
+fn main() -> int {
+    printd(9999)  // Test suite start marker
+    printd(-1)    // Separator
+    
+    // Run all tests
+    testCounter()
+    printd(-1)
+    
+    testPoint()
+    printd(-1)
+    
+    testRectangle()
+    printd(-1)
+    
+    testBankAccount()
+    printd(-1)
+    
+    printd(0)  // Test suite completed successfully
+    return 0
+}
+
