@@ -1,0 +1,49 @@
+// Test trigonometry utility functions
+
+fn main() -> int {
+    printd(1000)  // Start marker
+    
+    // Test degree/radian conversion
+    printd(degreesToRadians(0.0))      // 0.0
+    printd(degreesToRadians(90.0))     // ~1.5708 (PI/2)
+    printd(degreesToRadians(180.0))    // ~3.1416 (PI)
+    printd(degreesToRadians(360.0))    // ~6.2832 (2*PI)
+    
+    printd(radiansToDegrees(0.0))      // 0.0
+    printd(radiansToDegrees(1.5708))   // ~90.0
+    printd(radiansToDegrees(3.1416))   // ~180.0
+    
+    // Test normalizeAngle
+    printd(normalizeAngle(0.0))        // 0.0
+    printd(normalizeAngle(7.0))        // ~0.7168 (7 - 2*PI)
+    printd(normalizeAngle(-1.0))       // ~5.2832 (2*PI - 1)
+    
+    // Test normalizeAngleSigned
+    printd(normalizeAngleSigned(0.0))  // 0.0
+    printd(normalizeAngleSigned(4.0))  // ~0.8584 (4 - PI)
+    printd(normalizeAngleSigned(-4.0)) // ~-0.8584
+    
+    // Test distance between points
+    printd(distanceBetweenPoints(0.0, 0.0, 3.0, 4.0))   // 5.0
+    printd(distanceBetweenPoints(0.0, 0.0, 0.0, 0.0))   // 0.0
+    printd(distanceBetweenPoints(1.0, 1.0, 4.0, 5.0))   // 5.0
+    
+    // Test angle checks
+    let acute = 1.0  // ~57 degrees
+    let right = 1.5708  // 90 degrees
+    let obtuse = 2.0  // ~114 degrees
+    
+    printd(isAcuteAngle(acute))        // 1 (true)
+    printd(isAcuteAngle(obtuse))       // 0 (false)
+    
+    printd(isObtuseAngle(acute))       // 0 (false)
+    printd(isObtuseAngle(obtuse))      // 1 (true)
+    
+    printd(isRightAngle(right, 0.01))  // 1 (true)
+    printd(isRightAngle(acute, 0.01))  // 0 (false)
+    
+    printd(9999)  // End marker
+    return 0
+}
+
+

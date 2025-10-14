@@ -1,0 +1,51 @@
+// Test bitwise utility functions
+import "../../stdlib/aurora/collections/bitwise"
+
+fn main() -> int {
+    printd(1000)  // Start marker
+    
+    // Test popCount
+    printd(popCount(7))      // 3 (binary: 111)
+    printd(popCount(15))     // 4 (binary: 1111)
+    printd(popCount(255))    // 8 (binary: 11111111)
+    
+    // Test isBitSet
+    printd(isBitSet(5, 0))   // 1 (5 = 101, bit 0 is set)
+    printd(isBitSet(5, 1))   // 0 (5 = 101, bit 1 is not set)
+    printd(isBitSet(5, 2))   // 1 (5 = 101, bit 2 is set)
+    
+    // Test setBit
+    printd(setBit(4, 0))     // 5 (100 -> 101)
+    printd(setBit(4, 1))     // 6 (100 -> 110)
+    
+    // Test clearBit
+    printd(clearBit(7, 0))   // 6 (111 -> 110)
+    printd(clearBit(7, 1))   // 5 (111 -> 101)
+    
+    // Test toggleBit
+    printd(toggleBit(5, 0))  // 4 (101 -> 100)
+    printd(toggleBit(5, 1))  // 7 (101 -> 111)
+    
+    // Test isPowerOfTwo
+    printd(isPowerOfTwo(1))   // 1 (true)
+    printd(isPowerOfTwo(2))   // 1 (true)
+    printd(isPowerOfTwo(3))   // 0 (false)
+    printd(isPowerOfTwo(16))  // 1 (true)
+    printd(isPowerOfTwo(15))  // 0 (false)
+    
+    // Test nextPowerOfTwo
+    printd(nextPowerOfTwo(3))   // 4
+    printd(nextPowerOfTwo(5))   // 8
+    printd(nextPowerOfTwo(16))  // 16
+    printd(nextPowerOfTwo(17))  // 32
+    
+    // Test countTrailingZeros
+    printd(countTrailingZeros(8))   // 3 (1000)
+    printd(countTrailingZeros(12))  // 2 (1100)
+    printd(countTrailingZeros(7))   // 0 (111)
+    
+    printd(9999)  // End marker
+    return 0
+}
+
+

@@ -220,8 +220,20 @@ llvm::Value* WhileStmt::codegen() {
     llvm::Value* cond_val = condition->codegen();
     if (!cond_val) return nullptr;
     
-    cond_val = ctx.getBuilder().CreateFCmpONE(cond_val,
-        llvm::ConstantFP::get(ctx.getContext(), llvm::APFloat(0.0)), "whilecond");
+    // Convert condition to bool (i1)
+    llvm::Type* cond_type = cond_val->getType();
+    if (cond_type->isIntegerTy(1)) {
+        // Already a boolean
+    } else if (cond_type->isIntegerTy()) {
+        cond_val = ctx.getBuilder().CreateICmpNE(cond_val,
+            llvm::ConstantInt::get(cond_type, 0), "whilecond");
+    } else if (cond_type->isDoubleTy() || cond_type->isFloatTy()) {
+        cond_val = ctx.getBuilder().CreateFCmpONE(cond_val,
+            llvm::ConstantFP::get(cond_type, 0.0), "whilecond");
+    } else {
+        return logError("Invalid condition type in while statement");
+    }
+    
     ctx.getBuilder().CreateCondBr(cond_val, body_bb, after_bb);
     
     // Emit loop body

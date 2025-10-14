@@ -1,0 +1,117 @@
+// AuroraLang Standard Library - Trigonometry
+// Trigonometric functions and utilities
+
+// Note: Basic trig functions (sin, cos, tan) are built-in
+// This module provides additional trigonometric utilities
+
+// Convert degrees to radians
+fn degreesToRadians(degrees: double) -> double {
+    let pi = 3.141592653589793
+    return degrees * pi / 180.0
+}
+
+// Convert radians to degrees
+fn radiansToDegrees(radians: double) -> double {
+    let pi = 3.141592653589793
+    return radians * 180.0 / pi
+}
+
+// Normalize angle to [0, 2*PI) range
+fn normalizeAngle(angle: double) -> double {
+    let twoPi = 6.283185307179586
+    var normalized = angle
+    
+    while normalized < 0.0 {
+        normalized = normalized + twoPi
+    }
+    
+    while normalized >= twoPi {
+        normalized = normalized - twoPi
+    }
+    
+    return normalized
+}
+
+// Normalize angle to [-PI, PI) range
+fn normalizeAngleSigned(angle: double) -> double {
+    let pi = 3.141592653589793
+    let twoPi = 6.283185307179586
+    var normalized = angle
+    
+    while normalized < -pi {
+        normalized = normalized + twoPi
+    }
+    
+    while normalized >= pi {
+        normalized = normalized - twoPi
+    }
+    
+    return normalized
+}
+
+// Calculate angle between two points (in radians)
+fn angleBetweenPoints(x1: double, y1: double, x2: double, y2: double) -> double {
+    let dx = x2 - x1
+    let dy = y2 - y1
+    // Note: atan2 is a built-in function
+    // return atan2(dy, dx)
+    // For now, return 0.0 as placeholder
+    return 0.0
+}
+
+// Calculate distance between two points
+fn distanceBetweenPoints(x1: double, y1: double, x2: double, y2: double) -> double {
+    let dx = x2 - x1
+    let dy = y2 - y1
+    let distSquared = dx * dx + dy * dy
+    
+    // Use Newton's method for square root
+    if distSquared == 0.0 {
+        return 0.0
+    }
+    
+    var guess = distSquared / 2.0
+    let epsilon = 0.00001
+    var i = 0
+    
+    while i < 50 {
+        let nextGuess = (guess + distSquared / guess) / 2.0
+        let diff = guess - nextGuess
+        let absDiff = diff < 0.0 ? -diff : diff
+        
+        if absDiff < epsilon {
+            return nextGuess
+        }
+        
+        guess = nextGuess
+        i = i + 1
+    }
+    
+    return guess
+}
+
+// Check if angle is acute (< 90 degrees or < PI/2 radians)
+fn isAcuteAngle(radians: double) -> bool {
+    let halfPi = 1.5707963267948966
+    let normalized = normalizeAngle(radians)
+    return normalized < halfPi
+}
+
+// Check if angle is obtuse (> 90 degrees or > PI/2 radians, but < 180 degrees)
+fn isObtuseAngle(radians: double) -> bool {
+    let halfPi = 1.5707963267948966
+    let pi = 3.141592653589793
+    let normalized = normalizeAngle(radians)
+    return normalized > halfPi && normalized < pi
+}
+
+// Check if angle is right angle (90 degrees or PI/2 radians, with epsilon)
+fn isRightAngle(radians: double, epsilon: double) -> bool {
+    let halfPi = 1.5707963267948966
+    let normalized = normalizeAngle(radians)
+    let diff = normalized - halfPi
+    let absDiff = diff < 0.0 ? -diff : diff
+    return absDiff < epsilon
+}
+
+

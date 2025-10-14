@@ -1,5 +1,5 @@
 // Test stdlib array utility functions
-import "../../stdlib/aurora/collections/array_utils"
+// Note: stdlib is auto-imported, no need for manual import
 
 fn main() -> int {
     // Create test array
@@ -7,30 +7,34 @@ fn main() -> int {
     let len = 6
     
     // Test min and max
-    printd(min_int_array(arr, len))    // 1
-    printd(max_int_array(arr, len))    // 9
+    printd(minIntArray(arr, len))    // 1
+    printd(maxIntArray(arr, len))    // 9
+    
+    // Test sum and average
+    printd(sumIntArray(arr, len))    // 28
+    printd(averageIntArray(arr, len)) // 4.666...
     
     // Test contains
-    printd(contains_int(arr, len, 8))  // 1 (true)
-    printd(contains_int(arr, len, 10)) // 0 (false)
+    printd(containsInt(arr, len, 8))  // 1 (true)
+    printd(containsInt(arr, len, 10)) // 0 (false)
     
-    // Test index_of
-    printd(index_of_int(arr, len, 8))  // 2
-    printd(index_of_int(arr, len, 10)) // -1
+    // Test indexOf
+    printd(indexOfInt(arr, len, 8))  // 2
+    printd(indexOfInt(arr, len, 10)) // -1
     
     // Test count
     let arr2 = [1, 2, 3, 2, 4, 2]
-    printd(count_int(arr2, 6, 2))      // 3
-    printd(count_int(arr2, 6, 5))      // 0
+    printd(countInt(arr2, 6, 2))      // 3
+    printd(countInt(arr2, 6, 5))      // 0
     
-    // Test is_sorted
-    let sorted_arr = [1, 2, 3, 4, 5]
-    printd(is_sorted_int(sorted_arr, 5))  // 1 (true)
-    printd(is_sorted_int(arr, len))       // 0 (false)
+    // Test isSorted
+    let sortedArr = [1, 2, 3, 4, 5]
+    printd(isSortedInt(sortedArr, 5))  // 1 (true)
+    printd(isSortedInt(arr, len))       // 0 (false)
     
-    // Test bubble_sort
+    // Test bubbleSort
     let arr3 = [5, 2, 8, 1, 9]
-    bubble_sort_int(arr3, 5)
+    bubbleSortInt(arr3, 5)
     printd(arr3[0])  // 1
     printd(arr3[1])  // 2
     printd(arr3[2])  // 5
@@ -39,7 +43,7 @@ fn main() -> int {
     
     // Test reverse
     let arr4 = [1, 2, 3, 4, 5]
-    reverse_int_array(arr4, 5)
+    reverseIntArray(arr4, 5)
     printd(arr4[0])  // 5
     printd(arr4[1])  // 4
     printd(arr4[2])  // 3
@@ -48,10 +52,16 @@ fn main() -> int {
     
     // Test binary search (on sorted array)
     let sorted = [1, 3, 5, 7, 9, 11, 13]
-    printd(binary_search_int(sorted, 7, 7))   // 3
-    printd(binary_search_int(sorted, 7, 1))   // 0
-    printd(binary_search_int(sorted, 7, 13))  // 6
-    printd(binary_search_int(sorted, 7, 10))  // -1
+    printd(binarySearchInt(sorted, 7, 7))   // 3
+    printd(binarySearchInt(sorted, 7, 1))   // 0
+    printd(binarySearchInt(sorted, 7, 13))  // 6
+    printd(binarySearchInt(sorted, 7, 10))  // -1
+    
+    // Test fill
+    let arr5 = [0, 0, 0, 0, 0]
+    fillInt(arr5, 5, 42)
+    printd(arr5[0])  // 42
+    printd(arr5[4])  // 42
     
     return 0
 }

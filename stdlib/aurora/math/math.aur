@@ -1,12 +1,13 @@
 // AuroraLang Standard Library - Math
 // Mathematical functions and constants
 
-// Constants
-// let PI = 3.141592653589793
-// let E = 2.718281828459045
+// Note: Constants will be added when language supports global constants
+// For now, use functions or inline values
+// PI = 3.141592653589793
+// E = 2.718281828459045
 
 // Absolute value for integers
-fn abs_int(x: int) -> int {
+fn absInt(x: int) -> int {
     if x < 0 {
         return -x
     }
@@ -14,7 +15,7 @@ fn abs_int(x: int) -> int {
 }
 
 // Absolute value for doubles
-fn abs_double(x: double) -> double {
+fn absDouble(x: double) -> double {
     if x < 0.0 {
         return -x
     }
@@ -22,7 +23,7 @@ fn abs_double(x: double) -> double {
 }
 
 // Minimum of two integers
-fn min_int(a: int, b: int) -> int {
+fn minInt(a: int, b: int) -> int {
     if a < b {
         return a
     }
@@ -30,7 +31,7 @@ fn min_int(a: int, b: int) -> int {
 }
 
 // Maximum of two integers
-fn max_int(a: int, b: int) -> int {
+fn maxInt(a: int, b: int) -> int {
     if a > b {
         return a
     }
@@ -38,7 +39,7 @@ fn max_int(a: int, b: int) -> int {
 }
 
 // Minimum of two doubles
-fn min_double(a: double, b: double) -> double {
+fn minDouble(a: double, b: double) -> double {
     if a < b {
         return a
     }
@@ -46,7 +47,7 @@ fn min_double(a: double, b: double) -> double {
 }
 
 // Maximum of two doubles
-fn max_double(a: double, b: double) -> double {
+fn maxDouble(a: double, b: double) -> double {
     if a > b {
         return a
     }
@@ -54,17 +55,25 @@ fn max_double(a: double, b: double) -> double {
 }
 
 // Power function for integers (base^exponent)
-fn pow_int(base: int, exponent: int) -> int {
+fn powInt(base: int, exponent: int) -> int {
     if exponent == 0 {
         return 1
+    }
+    if exponent == 1 {
+        return base
     }
     
     var result = 1
     var exp = exponent
     var b = base
     
-    while exp > 0 {
-        if exp % 2 == 1 {
+    loop {
+        if exp <= 0 {
+            break
+        }
+        
+        let isOdd = exp % 2
+        if isOdd == 1 {
             result = result * b
         }
         b = b * b
@@ -82,12 +91,35 @@ fn factorial(n: int) -> int {
     return n * factorial(n - 1)
 }
 
+// Fibonacci number at position n
+fn fibonacci(n: int) -> int {
+    if n <= 1 {
+        return n
+    }
+    var a = 0
+    var b = 1
+    var i = 2
+    loop {
+        if i > n {
+            break
+        }
+        let temp = a + b
+        a = b
+        b = temp
+        i = i + 1
+    }
+    return b
+}
+
 // Greatest common divisor (Euclidean algorithm)
 fn gcd(a: int, b: int) -> int {
-    var x = a
-    var y = b
+    var x = absInt(a)
+    var y = absInt(b)
     
-    while y != 0 {
+    loop {
+        if y == 0 {
+            break
+        }
         let temp = y
         y = x % y
         x = temp
@@ -98,27 +130,48 @@ fn gcd(a: int, b: int) -> int {
 
 // Least common multiple
 fn lcm(a: int, b: int) -> int {
-    if a == 0 || b == 0 {
+    if a == 0 {
         return 0
     }
-    return (a * b) / gcd(a, b)
+    if b == 0 {
+        return 0
+    }
+    let absA = absInt(a)
+    let absB = absInt(b)
+    return (absA * absB) / gcd(absA, absB)
 }
 
 // Check if a number is prime
-fn is_prime(n: int) -> bool {
+fn isPrime(n: int) -> bool {
     if n <= 1 {
         return false
     }
     if n <= 3 {
         return true
     }
-    if n % 2 == 0 || n % 3 == 0 {
+    
+    let mod2 = n % 2
+    let mod3 = n % 3
+    if mod2 == 0 {
+        return false
+    }
+    if mod3 == 0 {
         return false
     }
     
     var i = 5
-    while i * i <= n {
-        if n % i == 0 || n % (i + 2) == 0 {
+    loop {
+        let square = i * i
+        if square > n {
+            break
+        }
+        
+        let modI = n % i
+        let modI2 = n % (i + 2)
+        if modI == 0 {
+            return false
+        }
+        if modI2 == 0 {
             return false
         }
         i = i + 6
@@ -128,9 +181,9 @@ fn is_prime(n: int) -> bool {
 }
 
 // Simple square root approximation using Newton's method
-fn sqrt_approx(x: double) -> double {
+fn sqrtApprox(x: double) -> double {
     if x < 0.0 {
-        return 0.0  // Error case
+        return 0.0
     }
     if x == 0.0 {
         return 0.0
@@ -140,20 +193,65 @@ fn sqrt_approx(x: double) -> double {
     let epsilon = 0.00001
     
     var i = 0
-    while i < 100 {  // Max 100 iterations
-        let next_guess = (guess + x / guess) / 2.0
-        let diff = guess - next_guess
-        let abs_diff = diff < 0.0 ? -diff : diff
-        
-        if abs_diff < epsilon {
-            return next_guess
+    loop {
+        if i >= 100 {
+            break
         }
         
-        guess = next_guess
+        let nextGuess = (guess + x / guess) / 2.0
+        let diff = guess - nextGuess
+        let absDiff = diff < 0.0 ? -diff : diff
+        
+        if absDiff < epsilon {
+            return nextGuess
+        }
+        
+        guess = nextGuess
         i = i + 1
     }
     
     return guess
 }
 
+// Clamp a value between min and max
+fn clampInt(value: int, min: int, max: int) -> int {
+    if value < min {
+        return min
+    }
+    if value > max {
+        return max
+    }
+    return value
+}
+
+fn clampDouble(value: double, min: double, max: double) -> double {
+    if value < min {
+        return min
+    }
+    if value > max {
+        return max
+    }
+    return value
+}
+
+// Sign function (-1, 0, or 1)
+fn signInt(x: int) -> int {
+    if x < 0 {
+        return -1
+    }
+    if x > 0 {
+        return 1
+    }
+    return 0
+}
+
+fn signDouble(x: double) -> int {
+    if x < 0.0 {
+        return -1
+    }
+    if x > 0.0 {
+        return 1
+    }
+    return 0
+}
 

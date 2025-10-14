@@ -150,9 +150,6 @@ AuroraLang is in **active development** with a clear mission: **build the langua
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Contributing, debugging, and development workflow
 - **[Development Roadmap](docs/ROADMAP.md)** - Current status and future plans
 
-### Project Info
-- **[Why AuroraLang?](docs/WHY_AURORALANG.md)** - Understanding our value proposition
-
 ---
 
 ## 🤝 Contributing

@@ -1,0 +1,74 @@
+// AuroraLang Standard Library - Range Utilities
+// Functions for working with numeric ranges
+
+// Check if value is within range [min, max] (inclusive)
+fn inRangeInt(value: int, min: int, max: int) -> bool {
+    return value >= min && value <= max
+}
+
+fn inRangeDouble(value: double, min: double, max: double) -> bool {
+    return value >= min && value <= max
+}
+
+// Map a value from one range to another
+fn mapRangeInt(value: int, fromMin: int, fromMax: int, toMin: int, toMax: int) -> int {
+    let fromRange = fromMax - fromMin
+    let toRange = toMax - toMin
+    let normalized = value - fromMin
+    return toMin + (normalized * toRange) / fromRange
+}
+
+fn mapRangeDouble(value: double, fromMin: double, fromMax: double, toMin: double, toMax: double) -> double {
+    let fromRange = fromMax - fromMin
+    let toRange = toMax - toMin
+    let normalized = value - fromMin
+    return toMin + (normalized * toRange) / fromRange
+}
+
+// Linear interpolation (lerp) between two values
+fn lerpDouble(a: double, b: double, t: double) -> double {
+    return a + (b - a) * t
+}
+
+fn lerpInt(a: int, b: int, t: double) -> int {
+    let result = a + (b - a) * t
+    return result
+}
+
+// Inverse lerp - find t for a value between a and b
+fn inverseLerpDouble(a: double, b: double, value: double) -> double {
+    if a == b {
+        return 0.0
+    }
+    return (value - a) / (b - a)
+}
+
+// Step function - returns 0 if x < edge, else 1
+fn stepDouble(edge: double, x: double) -> int {
+    if x < edge {
+        return 0
+    }
+    return 1
+}
+
+fn stepInt(edge: int, x: int) -> int {
+    if x < edge {
+        return 0
+    }
+    return 1
+}
+
+// Smoothstep - smooth interpolation between 0 and 1
+fn smoothstep(edge0: double, edge1: double, x: double) -> double {
+    if x < edge0 {
+        return 0.0
+    }
+    if x >= edge1 {
+        return 1.0
+    }
+    
+    let t = (x - edge0) / (edge1 - edge0)
+    return t * t * (3.0 - 2.0 * t)
+}
+
+

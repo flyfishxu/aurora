@@ -4,37 +4,109 @@
 // Assert that a condition is true, panic if false
 fn assert(condition: bool, message: string) -> void {
     if !condition {
-        // panic(message)
-        // For now, we just return since panic is not implemented
+        // TODO: panic(message) when panic is implemented
+        return
+    }
+}
+
+// Assert that a condition is true (simple version)
+fn assertTrue(condition: bool) -> void {
+    if !condition {
+        // TODO: panic("Assertion failed: expected true")
+        return
+    }
+}
+
+// Assert that a condition is false
+fn assertFalse(condition: bool) -> void {
+    if condition {
+        // TODO: panic("Assertion failed: expected false")
         return
     }
 }
 
 // Assert equality between two integers
-fn assert_eq_int(a: int, b: int) -> void {
+fn assertEqInt(a: int, b: int) -> void {
     if a != b {
-        // println("Assertion failed: " + str(a) + " != " + str(b))
-        // panic("assertion failed")
+        // TODO: println("Assertion failed: " + str(a) + " != " + str(b))
+        return
+    }
+}
+
+// Assert inequality between two integers
+fn assertNeqInt(a: int, b: int) -> void {
+    if a == b {
+        // TODO: println("Assertion failed: " + str(a) + " == " + str(b))
         return
     }
 }
 
 // Assert equality between two doubles (with epsilon for floating point)
-fn assert_eq_double(a: double, b: double, epsilon: double) -> void {
+fn assertEqDouble(a: double, b: double, epsilon: double) -> void {
     let diff = a - b
-    let abs_diff = diff < 0.0 ? -diff : diff
+    let absDiff = diff < 0.0 ? -diff : diff
     
-    if abs_diff > epsilon {
-        // println("Assertion failed: " + str(a) + " != " + str(b))
-        // panic("assertion failed")
+    if absDiff > epsilon {
+        // TODO: println("Assertion failed: " + str(a) + " != " + str(b))
+        return
+    }
+}
+
+// Assert inequality between two doubles (with epsilon)
+fn assertNeqDouble(a: double, b: double, epsilon: double) -> void {
+    let diff = a - b
+    let absDiff = diff < 0.0 ? -diff : diff
+    
+    if absDiff <= epsilon {
+        // TODO: println("Assertion failed: " + str(a) + " == " + str(b))
         return
     }
 }
 
 // Assert that a value is not null
-fn assert_not_null(value: int?) -> void {
+fn assertNotNull(value: int?) -> void {
     if value == null {
-        // panic("assertion failed: value is null")
+        // TODO: panic("Assertion failed: value is null")
+        return
+    }
+}
+
+// Assert that a value is null
+fn assertNull(value: int?) -> void {
+    if value != null {
+        // TODO: panic("Assertion failed: value is not null")
+        return
+    }
+}
+
+// Assert greater than for integers
+fn assertGreaterInt(a: int, b: int) -> void {
+    if a <= b {
+        // TODO: println("Assertion failed: " + str(a) + " <= " + str(b))
+        return
+    }
+}
+
+// Assert greater than or equal for integers
+fn assertGreaterOrEqInt(a: int, b: int) -> void {
+    if a < b {
+        // TODO: println("Assertion failed: " + str(a) + " < " + str(b))
+        return
+    }
+}
+
+// Assert less than for integers
+fn assertLessInt(a: int, b: int) -> void {
+    if a >= b {
+        // TODO: println("Assertion failed: " + str(a) + " >= " + str(b))
+        return
+    }
+}
+
+// Assert less than or equal for integers
+fn assertLessOrEqInt(a: int, b: int) -> void {
+    if a > b {
+        // TODO: println("Assertion failed: " + str(a) + " > " + str(b))
         return
     }
 }

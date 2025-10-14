@@ -1,0 +1,56 @@
+// Test range and conversion utility functions
+
+fn main() -> int {
+    printd(1000)  // Start marker
+    
+    // Test inRange
+    printd(inRangeInt(15, 10, 20))     // 1 (true)
+    printd(inRangeInt(5, 10, 20))      // 0 (false)
+    printd(inRangeInt(10, 10, 20))     // 1 (true)
+    printd(inRangeDouble(15.5, 10.0, 20.0))  // 1
+    
+    // Test mapRange
+    printd(mapRangeInt(5, 0, 10, 0, 100))    // 50
+    printd(mapRangeInt(0, 0, 10, 0, 100))    // 0
+    printd(mapRangeInt(10, 0, 10, 0, 100))   // 100
+    
+    // Test lerp
+    printd(lerpDouble(0.0, 100.0, 0.5))      // 50.0
+    printd(lerpDouble(0.0, 100.0, 0.25))     // 25.0
+    printd(lerpInt(0, 100, 0.75))            // 75
+    
+    // Test smoothstep
+    printd(smoothstep(0.0, 1.0, 0.5))        // ~0.5
+    printd(smoothstep(0.0, 1.0, 0.0))        // 0.0
+    printd(smoothstep(0.0, 1.0, 1.0))        // 1.0
+    
+    // Test conversions
+    printd(boolToInt(true))                  // 1
+    printd(boolToInt(false))                 // 0
+    printd(intToBool(0))                     // 0 (false)
+    printd(intToBool(1))                     // 1 (true)
+    printd(intToBool(42))                    // 1 (true)
+    
+    // Test rounding
+    printd(roundToInt(3.4))                  // 3
+    printd(roundToInt(3.6))                  // 4
+    printd(roundToInt(-3.4))                 // -3
+    printd(roundToInt(-3.6))                 // -4
+    
+    printd(floorToInt(3.9))                  // 3
+    printd(floorToInt(-3.1))                 // -4
+    
+    printd(ceilToInt(3.1))                   // 4
+    printd(ceilToInt(-3.9))                  // -3
+    
+    // Test hex parsing
+    printd(parseHexDigit(48))                // 0 (char '0')
+    printd(parseHexDigit(57))                // 9 (char '9')
+    printd(parseHexDigit(65))                // 10 (char 'A')
+    printd(parseHexDigit(70))                // 15 (char 'F')
+    
+    printd(9999)  // End marker
+    return 0
+}
+
+

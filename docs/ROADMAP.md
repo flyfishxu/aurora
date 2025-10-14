@@ -1,6 +1,6 @@
 # AuroraLang Development Roadmap
 
-**Version**: 0.6.0  
+**Version**: 0.6.1  
 **Last Updated**: 2025-10-14  
 **Status**: Alpha - Active Development
 
@@ -40,8 +40,7 @@ AuroraLang aims to be the world's best programming language, combining:
 - Early adopters
 
 **Current Limitations**:
-- ⚠️ Limited string operations
-- ⚠️ Stdlib not integrated with language
+- ⚠️ Limited string operations  
 - ⚠️ No inheritance or polymorphism
 - ⚠️ No generics
 - ⚠️ No error handling types (Result/Option)
@@ -54,7 +53,7 @@ AuroraLang aims to be the world's best programming language, combining:
 | 🔧 **Compiler** | ~35% | ✅ Lexer, Parser, AST, Type System, OOP basics<br>❌ Generics, Traits, Advanced types |
 | ⚙️ **LLVM** | ~40% | ✅ IR generation, JIT compilation, Memory allocation, ARC<br>❌ Optimization pipeline, Vtables |
 | 🏗️ **Runtime** | ~70% | ✅ Array ops, Object ops, String ops, ARC (Automatic Reference Counting)<br>❌ Advanced memory management |
-| 📚 **Stdlib** | ~15% | ✅ C++ implementations (print, math, I/O, time, files)<br>❌ Language integration, Collections, Advanced features |
+| 📚 **Stdlib** | ~30% | ✅ Auto-import prelude, Math utils, Array utils, Bitwise ops, Range/Conversion<br>❌ String methods, Collections (generics required), Advanced features |
 | 🛠️ **Tooling** | ~10% | ✅ CLI, VSCode syntax highlighting<br>❌ LSP, Package manager, Debugger |
 
 ---
@@ -88,8 +87,13 @@ AuroraLang aims to be the world's best programming language, combining:
 - **Multi-file**: Compilation across files, circular import protection, module caching
 
 ### Standard Library Foundation
-- **C++ Implementations**:
-  - Print functions (printi, printd, printb, prints, with newline variants)
+- **Auto-Import Prelude**: 
+  - ✅ Prelude automatically loaded (like Kotlin stdlib)
+  - ✅ No manual imports needed for core functions
+  - ✅ Camel case naming convention
+
+- **C++ Built-in Functions** (via runtime):
+  - Print functions (printd, printi, printb, prints)
   - Math (sin, cos, tan, exp, log, pow, sqrt, floor, ceil, round)
   - Random (int, double, seed)
   - Time (now, nowMillis, sleep)
@@ -97,10 +101,12 @@ AuroraLang aims to be the world's best programming language, combining:
   - String ops (concat, compare, substring, conversions)
   - System (exit, getEnv, args)
 
-- **Aurora Implementations**:
-  - Core/Assert (assert, assert_eq_int, assert_eq_double, assert_not_null)
-  - Math utilities (abs, min, max, factorial, gcd, lcm, is_prime, sqrt_approx)
-  - Array utilities (min, max, reverse, contains, sort, binary_search)
+- **Aurora Stdlib Modules**:
+  - **Core**: assert, range, conversion utilities
+  - **Math**: absInt/absDouble, minInt/maxInt, factorial, fibonacci, gcd, lcm, isPrime, sqrtApprox, clamp, sign
+  - **Trigonometry**: degree/radian conversion, angle normalization, distance calculation
+  - **Arrays**: sum, average, min/max, reverse, contains, indexOf, count, sort, binarySearch, fill, copy
+  - **Bitwise**: popCount, bit manipulation, power of 2 checks, bit rotation
 
 ### Developer Experience
 - **Diagnostics**: Rust-style error formatting, source snippets, color output, error codes
@@ -122,16 +128,26 @@ AuroraLang aims to be the world's best programming language, combining:
 **Timeline**: 2-3 months
 
 **Goals**:
-1. Integrate C++ stdlib functions as built-in language features
-2. Complete string type implementation with operations
-3. Array property access (`arr.length`)
-4. Automatic stdlib initialization
+1. ✅ Integrate stdlib functions as auto-imported prelude
+2. ✅ Camel case naming convention for all stdlib functions
+3. ✅ Comprehensive math, array, bitwise, and utility functions
+4. Complete string type implementation with operations
+5. Array property access (`arr.length`)
+
+**Completed** (v0.6.1):
+- ✅ Auto-import prelude (like Kotlin)
+- ✅ Renamed all stdlib functions to camelCase
+- ✅ Extended math utilities (fibonacci, clamp, sign)
+- ✅ Extended array utilities (sum, average, fill, copy)
+- ✅ Added trigonometry module
+- ✅ Added bitwise operations module
+- ✅ Added range and conversion utilities
+- ✅ Updated all tests to use new naming
 
 **Current Work**:
 - [ ] String concatenation (`"Hello" + " World"`)
 - [ ] String methods (split, trim, substring)
 - [ ] Array length property
-- [ ] Stdlib module system integration
 - [ ] Type system improvements for stdlib types
 
 ---
@@ -253,10 +269,11 @@ AuroraLang aims to be the world's best programming language, combining:
 ## Timeline & Milestones
 
 ### Short-Term (Next 3 months)
-1. ✅ Complete stdlib integration
-2. ✅ String operations
-3. ✅ Array properties
-4. ✅ ~~Choose and implement memory management~~ (ARC implemented)
+1. ✅ ~~Complete stdlib integration~~ (v0.6.1)
+2. ✅ ~~Auto-import prelude~~ (v0.6.1)
+3. ✅ ~~Comprehensive stdlib utilities~~ (v0.6.1)
+4. [ ] String operations (in progress)
+5. [ ] Array properties (planned)
 
 ### Medium-Term (3-12 months)
 5. ✅ ~~Memory management implementation~~ (ARC completed)
@@ -295,10 +312,11 @@ AuroraLang aims to be the world's best programming language, combining:
    - **Fix**: Implement string stdlib
    - **Timeline**: v0.7
 
-3. **Stdlib Not Integrated**
-   - C++ functions exist but not accessible from language
-   - **Fix**: Built-in function registration
-   - **Timeline**: v0.7
+3. ✅ **~~Stdlib Not Integrated~~** (RESOLVED in v0.6.1)
+   - **Solution**: Implemented auto-import prelude mechanism
+   - Stdlib now automatically available without manual imports
+   - All functions follow camelCase naming convention
+   - Comprehensive utility modules added
 
 4. **No Collections**
    - Cannot use Vec, HashMap, etc.

@@ -1,23 +1,25 @@
 // AuroraLang Standard Library - Core Prelude
-// This file contains fundamental functions and types available to all Aurora programs
+// This file is automatically imported into all Aurora programs
+// It provides fundamental functions and utilities
 
-// Print functions - these will be implemented as built-in functions
-// They are declared here for documentation purposes
+// Core utilities
+import "assert"
+import "range"
+import "conversion"
 
-// Print a double value to stdout
-// fn printd(value: double) -> double
+// Math utilities
+import "../math/math"
+import "../math/trigonometry"
 
-// Print an integer value to stdout
-// fn printi(value: int) -> int
+// Collection utilities
+import "../collections/array_utils"
+// import "../collections/bitwise"  // Temporarily disabled due to bitwise operator issues
 
-// Print a boolean value to stdout
-// fn printb(value: bool) -> bool
-
-// Print a string value to stdout
-// fn prints(value: string) -> void
-
-// Future: println variants that add newline
-// Future: format strings and print formatting
-// Future: print to different streams (stderr, files, etc.)
+// Print functions are built-in and provided by the runtime
+// They are available without any import:
+// - printd(value: double) -> double
+// - printi(value: int) -> int  
+// - printb(value: bool) -> bool
+// - prints(value: string) -> void
 
 

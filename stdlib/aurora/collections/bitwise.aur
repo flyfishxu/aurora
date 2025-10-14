@@ -1,0 +1,167 @@
+// AuroraLang Standard Library - Bitwise Utilities
+// Functions for bit manipulation
+
+// Count number of set bits (population count)
+fn popCount(n: int) -> int {
+    var count = 0
+    var value = n
+    
+    while value != 0 {
+        count = count + (value & 1)
+        value = value >> 1
+    }
+    
+    return count
+}
+
+// Check if a specific bit is set
+fn isBitSet(value: int, bitPosition: int) -> bool {
+    let mask = 1 << bitPosition
+    return (value & mask) != 0
+}
+
+// Set a specific bit
+fn setBit(value: int, bitPosition: int) -> int {
+    let mask = 1 << bitPosition
+    return value | mask
+}
+
+// Clear a specific bit
+fn clearBit(value: int, bitPosition: int) -> int {
+    let mask = 1 << bitPosition
+    return value & ~mask
+}
+
+// Toggle a specific bit
+fn toggleBit(value: int, bitPosition: int) -> int {
+    let mask = 1 << bitPosition
+    return value ^ mask
+}
+
+// Get bits in range [start, end)
+fn getBitsRange(value: int, start: int, length: int) -> int {
+    let mask = (1 << length) - 1
+    return (value >> start) & mask
+}
+
+// Check if value is power of 2
+fn isPowerOfTwo(n: int) -> bool {
+    if n <= 0 {
+        return false
+    }
+    return (n & (n - 1)) == 0
+}
+
+// Find next power of 2 greater than or equal to n
+fn nextPowerOfTwo(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    
+    var value = n - 1
+    value = value | (value >> 1)
+    value = value | (value >> 2)
+    value = value | (value >> 4)
+    value = value | (value >> 8)
+    value = value | (value >> 16)
+    
+    return value + 1
+}
+
+// Reverse bits in an integer (32-bit)
+fn reverseBits(n: int) -> int {
+    var result = 0
+    var value = n
+    var i = 0
+    
+    while i < 32 {
+        result = (result << 1) | (value & 1)
+        value = value >> 1
+        i = i + 1
+    }
+    
+    return result
+}
+
+// Count trailing zeros
+fn countTrailingZeros(n: int) -> int {
+    if n == 0 {
+        return 32
+    }
+    
+    var count = 0
+    var value = n
+    
+    while (value & 1) == 0 {
+        count = count + 1
+        value = value >> 1
+    }
+    
+    return count
+}
+
+// Count leading zeros (approximate for 32-bit)
+fn countLeadingZeros(n: int) -> int {
+    if n == 0 {
+        return 32
+    }
+    
+    var count = 0
+    var value = n
+    
+    // Start from MSB position
+    var mask = 1 << 31
+    
+    while (value & mask) == 0 && count < 32 {
+        count = count + 1
+        mask = mask >> 1
+    }
+    
+    return count
+}
+
+// Rotate left
+fn rotateLeft(value: int, shift: int) -> int {
+    let normalizedShift = shift & 31
+    return (value << normalizedShift) | (value >> (32 - normalizedShift))
+}
+
+// Rotate right
+fn rotateRight(value: int, shift: int) -> int {
+    let normalizedShift = shift & 31
+    return (value >> normalizedShift) | (value << (32 - normalizedShift))
+}
+
+// Swap adjacent bits
+fn swapAdjacentBits(n: int) -> int {
+    let evenMask = 1431655765  // 0x55555555
+    let oddMask = -1431655766  // 0xAAAAAAAA
+    return ((n & evenMask) << 1) | ((n & oddMask) >> 1)
+}
+
+// Check if two integers have opposite signs
+fn haveOppositeSigns(a: int, b: int) -> bool {
+    return (a ^ b) < 0
+}
+
+// Compute absolute value using bitwise operations
+fn absViaBitwise(n: int) -> int {
+    let mask = n >> 31
+    return (n ^ mask) - mask
+}
+
+// Minimum of two integers using bitwise operations
+fn minViaBitwise(a: int, b: int) -> int {
+    let diff = a - b
+    let sign = diff >> 31
+    return b + (diff & sign)
+}
+
+// Maximum of two integers using bitwise operations
+fn maxViaBitwise(a: int, b: int) -> int {
+    let diff = a - b
+    let sign = diff >> 31
+    return a - (diff & sign)
+}
+
+
