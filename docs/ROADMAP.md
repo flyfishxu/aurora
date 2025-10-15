@@ -1,7 +1,7 @@
 # AuroraLang Development Roadmap
 
-**Version**: 0.6.1  
-**Last Updated**: 2025-10-14  
+**Version**: 0.6.2  
+**Last Updated**: 2025-10-15  
 **Status**: Alpha - Active Development
 
 ---
@@ -69,6 +69,7 @@ AuroraLang aims to be the world's best programming language, combining:
 - **Operators**: Arithmetic, comparison, logical, bitwise, ternary (`?:`)
 - **Variables**: let/var declarations, optional semicolons
 - **Memory Management**: Automatic Reference Counting (ARC) for heap-allocated objects
+- **Package System**: Hierarchical package organization (Java/Kotlin style), package declarations, package-path imports
 
 ### Object-Oriented Programming
 - **Classes**: Declaration, fields, methods, constructors
@@ -82,9 +83,12 @@ AuroraLang aims to be the world's best programming language, combining:
 - **Arrays**: Declaration `[1, 2, 3]`, indexing `arr[i]`, nested indexing `matrix[i][j]`
 - **Runtime**: Bounds checking, array creation/access via C runtime
 
-### Module System
-- **Imports**: `import "module"` or `import "path/to/module"`
+### Module & Package System
+- **Package Declaration**: `package com.example.myapp` with hierarchical namespace organization
+- **Package Imports**: `import com.example.MyClass` with automatic path resolution
+- **Legacy Imports**: `import "module"` or `import "path/to/module"` (still supported)
 - **Multi-file**: Compilation across files, circular import protection, module caching
+- **Search Paths**: Configurable package search paths (`.`, `src`, `stdlib/aurora`)
 
 ### Standard Library Foundation
 - **Auto-Import Prelude**: 
@@ -273,8 +277,9 @@ AuroraLang aims to be the world's best programming language, combining:
 2. ✅ ~~Auto-import prelude~~ (v0.6.1)
 3. ✅ ~~Comprehensive stdlib utilities~~ (v0.6.1)
 4. ✅ ~~Clean stdlib API design~~ (v0.6.2) - Kotlin-inspired naming
-5. [ ] String operations (in progress)
-6. [ ] Array properties (planned - needs compiler support)
+5. ✅ ~~Package system implementation~~ (v0.6.2) - Hierarchical package organization
+6. [ ] String operations (in progress)
+7. [ ] Array properties (planned - needs compiler support)
 
 ### Medium-Term (3-12 months)
 5. ✅ ~~Memory management implementation~~ (ARC completed)

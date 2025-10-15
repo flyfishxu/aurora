@@ -23,6 +23,7 @@ static const std::unordered_map<std::string, TokenType> keywords = {
     {"false", TokenType::False},
     {"null", TokenType::Null},
     {"import", TokenType::Import},
+    {"package", TokenType::Package},
     {"class", TokenType::Class},
     {"object", TokenType::Object},
     {"this", TokenType::This},

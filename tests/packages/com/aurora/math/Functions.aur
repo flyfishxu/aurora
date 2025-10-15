@@ -1,0 +1,28 @@
+// Math functions in com.aurora.math package
+package com.aurora.math
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+fn fibonacci(n: int) -> int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+fn power(base: int, exp: int) -> int {
+    if exp == 0 {
+        return 1
+    }
+    let result = 1
+    for i in 0..exp {
+        result = result * base
+    }
+    return result
+}
+

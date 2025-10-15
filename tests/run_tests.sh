@@ -98,15 +98,15 @@ run_test() {
     local filename=$(basename "$file")
     local category=$(basename "$(dirname "$file")")
     
-    # Skip broken test files
-    if [[ "$filename" =~ "_broken" ]]; then
-        echo -e "  ${YELLOW}⊘${NC} $filename (skipped: marked as broken)"
+    # Skip broken and WIP test files
+    if [[ "$filename" =~ "_broken" || "$filename" =~ "_wip" ]]; then
+        echo -e "  ${YELLOW}⊘${NC} $filename (skipped: work in progress)"
         ((SKIP++))
         return
     fi
     
     # Skip library files (no main function)
-    if [[ "$filename" == "mathlib.aur" ]]; then
+    if [[ "$filename" == "mathlib.aur" || "$filename" == "Calculator.aur" || "$filename" == "Functions.aur" || "$filename" == "StringHelper.aur" ]]; then
         echo -e "  ${YELLOW}⊘${NC} $filename (skipped: library file)"
         ((SKIP++))
         return
@@ -228,6 +228,21 @@ run_test() {
                 check_output "$OUTPUT" "42" "Exit code test"
                 test_passed=$?
                 ;;
+            "testPackageSimple.aur")
+                check_output "$OUTPUT" "30000" "Package test start marker"
+                check_output "$OUTPUT" "39999" "Package test end marker"
+                test_passed=$?
+                ;;
+            "testPackageHierarchy.aur")
+                check_output "$OUTPUT" "40000" "Package hierarchy test start"
+                check_output "$OUTPUT" "49999" "Package hierarchy test end"
+                test_passed=$?
+                ;;
+            "testPackageImport.aur")
+                check_output "$OUTPUT" "20000" "Legacy import test start"
+                check_output "$OUTPUT" "29999" "Legacy import test end"
+                test_passed=$?
+                ;;
             "oop_demo_broken.aur")
                 check_output "$OUTPUT" "9999" "Test suite start marker"
                 check_output "$OUTPUT" "1000" "Counter test marker"
@@ -305,6 +320,7 @@ run_category() {
 run_category "core"
 run_category "oop"
 run_category "modules"
+run_category "packages"
 run_category "errors"
 run_category "arrays"
 run_category "stdlib"

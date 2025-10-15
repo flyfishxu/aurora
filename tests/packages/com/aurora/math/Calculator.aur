@@ -1,0 +1,32 @@
+// Calculator class in com.aurora.math package
+package com.aurora.math
+
+class Calculator {
+    pub fn add(a: int, b: int) -> int {
+        return a + b
+    }
+    
+    pub fn subtract(a: int, b: int) -> int {
+        return a - b
+    }
+    
+    pub fn multiply(a: int, b: int) -> int {
+        return a * b
+    }
+    
+    pub fn divide(a: int, b: int) -> int {
+        if b == 0 {
+            return 0
+        }
+        return a / b
+    }
+}
+
+fn square(x: int) -> int {
+    return x * x
+}
+
+fn cube(x: int) -> int {
+    return x * x * x
+}
+

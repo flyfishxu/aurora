@@ -17,8 +17,8 @@ using namespace aurora;
 // Version information
 #define AURORA_VERSION_MAJOR 0
 #define AURORA_VERSION_MINOR 6
-#define AURORA_VERSION_PATCH 1
-#define AURORA_VERSION "0.6.1"
+#define AURORA_VERSION_PATCH 2
+#define AURORA_VERSION "0.6.2"
 
 std::string loadFile(const std::string& path) {
     std::ifstream file(path);
@@ -122,11 +122,18 @@ int compileAndRun(const std::string& source, const std::string& filename, bool e
         logger.debug("Classes: " + std::to_string(classes.size()), "Parser");
         logger.debug("Imports: " + std::to_string(imports.size()), "Parser");
         
+        // Get current package (if any)
+        std::string currentPackage;
+        if (parser.getPackage()) {
+            currentPackage = parser.getPackage()->getPackageName();
+            logger.info("Package: " + currentPackage);
+        }
+        
         // Auto-import prelude (like Kotlin's stdlib)
         logger.phaseStart("Prelude loading");
         auto preludeImport = std::make_unique<ImportDecl>("stdlib/aurora/core/prelude");
         logger.debug("Auto-loading prelude...", "Modules");
-        if (!preludeImport->load(filename)) {
+        if (!preludeImport->load(filename, currentPackage)) {
             logger.warning("Failed to auto-load prelude - stdlib functions may not be available");
         }
         logger.phaseEnd("Prelude loading");
@@ -136,7 +143,7 @@ int compileAndRun(const std::string& source, const std::string& filename, bool e
             logger.phaseStart("Module loading");
             for (auto& import : imports) {
                 logger.debug("Loading module: " + import->getModulePath(), "Modules");
-                if (!import->load(filename)) {
+                if (!import->load(filename, currentPackage)) {
                     logger.error("Failed to load module: " + import->getModulePath());
                     return 1;
                 }

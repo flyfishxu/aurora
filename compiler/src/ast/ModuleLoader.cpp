@@ -7,13 +7,25 @@
 #include <sstream>
 #include <filesystem>
 #include <set>
+#include <algorithm>
 
 namespace aurora {
 
 // Keep track of already loaded modules to prevent circular imports
 static std::set<std::string> loadedModules;
 
-bool ImportDecl::load(const std::string& currentFile) {
+// Global registry for package source directories
+static std::vector<std::string> packageSearchPaths = {".", "src", "stdlib/aurora"};
+
+std::string PackageDecl::toPath() const {
+    // Convert package name to file system path
+    // com.example.myapp -> com/example/myapp
+    std::string path = packageName;
+    std::replace(path.begin(), path.end(), '.', '/');
+    return path;
+}
+
+bool ImportDecl::load(const std::string& currentFile, const std::string& currentPackage) {
     auto& logger = Logger::instance();
     
     // Check if module is already loaded
@@ -24,31 +36,91 @@ bool ImportDecl::load(const std::string& currentFile) {
     
     // Resolve module path (.aur file)
     std::string filePath;
+    bool isPackageImport = false;
     
+    // Determine if this is a package-style import (contains dots but no slashes)
+    if (modulePath.find('.') != std::string::npos && 
+        modulePath.find('/') == std::string::npos && 
+        modulePath.find('\\') == std::string::npos) {
+        // Package-style import: com.example.MyClass
+        isPackageImport = true;
+        
+        // Convert package path to file path
+        std::string packagePath = modulePath;
+        std::replace(packagePath.begin(), packagePath.end(), '.', '/');
+        filePath = packagePath + ".aur";
+        
+        logger.debug("Package import detected: " + modulePath + " -> " + filePath, "Modules");
+    } 
     // If path contains '/', treat as relative path
-    if (modulePath.find('/') != std::string::npos || modulePath.find('\\') != std::string::npos) {
+    else if (modulePath.find('/') != std::string::npos || modulePath.find('\\') != std::string::npos) {
         filePath = modulePath;
-        // Check if path ends with .aur (C++17 compatible)
+        // Check if path ends with .aur
         if (filePath.length() < 4 || filePath.substr(filePath.length() - 4) != ".aur") {
             filePath += ".aur";
         }
     } else {
-        // Otherwise, look in current directory
+        // Simple name - look in current directory or package-relative
         filePath = modulePath + ".aur";
     }
     
-    // Try to resolve relative to current file's directory first
-    std::string resolvedPath = filePath;
-    if (!currentFile.empty() && !std::filesystem::exists(filePath)) {
-        std::filesystem::path currentPath(currentFile);
-        std::filesystem::path modulePath(filePath);
-        resolvedPath = (currentPath.parent_path() / modulePath).string();
-    }
+    // Try to resolve the file path
+    std::string resolvedPath;
     
-    // Check if file exists
-    if (!std::filesystem::exists(resolvedPath)) {
-        logger.error("Module file not found: " + resolvedPath + " (imported from: " + currentFile + ")");
-        return false;
+    // Try different resolution strategies
+    if (isPackageImport) {
+        // For package imports, search in package search paths
+        bool found = false;
+        
+        // First try relative to current file (for test organization)
+        if (!currentFile.empty()) {
+            std::filesystem::path currentPath(currentFile);
+            std::filesystem::path candidate = currentPath.parent_path() / filePath;
+            if (std::filesystem::exists(candidate)) {
+                resolvedPath = candidate.string();
+                found = true;
+                logger.debug("Found package file relative to current: " + resolvedPath, "Modules");
+            }
+        }
+        
+        // Then try package search paths
+        if (!found) {
+            for (const auto& searchPath : packageSearchPaths) {
+                std::string candidate = searchPath + "/" + filePath;
+                if (std::filesystem::exists(candidate)) {
+                    resolvedPath = candidate;
+                    found = true;
+                    logger.debug("Found package file in search path: " + resolvedPath, "Modules");
+                    break;
+                }
+            }
+        }
+        
+        // Finally try current directory
+        if (!found && std::filesystem::exists(filePath)) {
+            resolvedPath = filePath;
+            found = true;
+            logger.debug("Found package file in current dir: " + resolvedPath, "Modules");
+        }
+        
+        if (!found) {
+            logger.error("Package file not found: " + modulePath + " (searched in package paths and relative to " + currentFile + ")");
+            return false;
+        }
+    } else {
+        // For regular imports, try relative to current file first
+        resolvedPath = filePath;
+        if (!currentFile.empty() && !std::filesystem::exists(filePath)) {
+            std::filesystem::path currentPath(currentFile);
+            std::filesystem::path moduleFilePath(filePath);
+            resolvedPath = (currentPath.parent_path() / moduleFilePath).string();
+        }
+        
+        // Check if file exists
+        if (!std::filesystem::exists(resolvedPath)) {
+            logger.error("Module file not found: " + resolvedPath + " (imported from: " + currentFile + ")");
+            return false;
+        }
     }
     
     filePath = resolvedPath;
@@ -77,9 +149,16 @@ bool ImportDecl::load(const std::string& currentFile) {
         logger.debug("Module contains " + std::to_string(functions.size()) + 
                     " function(s) and " + std::to_string(classes.size()) + " class(es)", "Modules");
         
+        // Get package name from parsed module
+        std::string modulePackage;
+        if (parser.getPackage()) {
+            modulePackage = parser.getPackage()->getPackageName();
+            logger.debug("Module package: " + modulePackage, "Modules");
+        }
+        
         // Process sub-imports recursively
         for (auto& subImport : subImports) {
-            if (!subImport->load(filePath)) {
+            if (!subImport->load(filePath, modulePackage)) {
                 logger.error("Failed to load sub-import: " + subImport->getModulePath());
                 return false;
             }

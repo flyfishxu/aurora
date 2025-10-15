@@ -28,6 +28,7 @@ enum class TokenType {
     False,        // false
     Null,         // null
     Import,       // import
+    Package,      // package
     
     // Object-Oriented Keywords
     Class,        // class

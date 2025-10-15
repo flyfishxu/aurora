@@ -16,12 +16,16 @@ public:
     std::vector<std::unique_ptr<Function>> parseProgram();
     std::vector<std::unique_ptr<ClassDecl>>& getClasses() { return classes_; }
     std::vector<std::unique_ptr<ImportDecl>>& getImports() { return imports_; }
+    std::unique_ptr<PackageDecl>& getPackage() { return package_; }
+    const std::string& getCurrentPackageName() const { return currentPackageName_; }
     
 private:
     Lexer& lexer_;
     Token current_token_;
     std::vector<std::unique_ptr<ClassDecl>> classes_;
     std::vector<std::unique_ptr<ImportDecl>> imports_;
+    std::unique_ptr<PackageDecl> package_;
+    std::string currentPackageName_;  // Track current package for resolution
     
     // Symbol table for tracking variable types during parsing
     std::map<std::string, std::shared_ptr<Type>> local_types_;
@@ -36,6 +40,7 @@ private:
     std::unique_ptr<Function> parseFunction();
     std::unique_ptr<Prototype> parsePrototype();
     std::unique_ptr<Prototype> parseExtern();
+    std::unique_ptr<PackageDecl> parsePackage();
     std::unique_ptr<ImportDecl> parseImport();
     std::vector<std::unique_ptr<Stmt>> parseBlock();
     std::unique_ptr<Stmt> parseStatement();

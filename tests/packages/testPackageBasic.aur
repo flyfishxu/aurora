@@ -1,0 +1,23 @@
+// Test basic package declaration and import
+package test.basic
+
+// Import using package path
+import com.aurora.math.Calculator
+
+fn main() -> int {
+    printd(10000)  // Test start marker
+    
+    // Test package-declared functions
+    let sq = square(5)
+    printd(sq)  // Should print 25
+    
+    let cb = cube(3)
+    printd(cb)  // Should print 27
+    
+    let sq2 = square(7)
+    printd(sq2)  // Should print 49
+    
+    printd(9999)  // Test end marker
+    return 0
+}
+

@@ -1,0 +1,19 @@
+// Test package import without package declaration (backward compatibility)
+
+// Old-style string import (still supported)
+import "com/aurora/math/Calculator"
+
+fn main() -> int {
+    printd(20000)  // Test start marker
+    
+    // Test old-style import with functions
+    let sq = square(8)
+    printd(sq)  // Should print 64
+    
+    let cb = cube(4)
+    printd(cb)  // Should print 64
+    
+    printd(29999)  // Test end marker
+    return 0
+}
+

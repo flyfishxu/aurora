@@ -59,6 +59,12 @@ void Parser::error(const std::string& message) {
 std::vector<std::unique_ptr<Function>> Parser::parseProgram() {
     std::vector<std::unique_ptr<Function>> functions;
     
+    // Package declaration must come first (if present)
+    if (current_token_.type == TokenType::Package) {
+        package_ = parsePackage();
+        currentPackageName_ = package_->getPackageName();
+    }
+    
     while (current_token_.type != TokenType::Eof) {
         if (current_token_.type == TokenType::Import) {
             // Parse import declaration
@@ -80,16 +86,69 @@ std::vector<std::unique_ptr<Function>> Parser::parseProgram() {
     return functions;
 }
 
+std::unique_ptr<PackageDecl> Parser::parsePackage() {
+    expect(TokenType::Package, "Expected 'package'");
+    
+    // Parse package name (can be dotted identifier like com.example.myapp)
+    std::string packageName;
+    
+    if (current_token_.type != TokenType::Identifier) {
+        error("Expected package name after 'package'");
+    }
+    
+    packageName = current_token_.value;
+    advance();
+    
+    // Parse dotted package name (com.example.myapp)
+    while (current_token_.type == TokenType::Dot) {
+        advance(); // consume '.'
+        if (current_token_.type != TokenType::Identifier) {
+            error("Expected identifier after '.' in package name");
+        }
+        packageName += ".";
+        packageName += current_token_.value;
+        advance();
+    }
+    
+    // Optional semicolon
+    match(TokenType::Semicolon);
+    
+    return std::make_unique<PackageDecl>(packageName);
+}
+
 std::unique_ptr<ImportDecl> Parser::parseImport() {
     expect(TokenType::Import, "Expected 'import'");
     
-    if (current_token_.type != TokenType::StringLiteral && 
-        current_token_.type != TokenType::Identifier) {
-        error("Expected module path after 'import' (string or identifier)");
-    }
+    // Parse import path - can be:
+    // 1. String literal: import "path/to/file"
+    // 2. Package path: import com.example.MyClass
+    // 3. Package wildcard: import com.example.* (future support)
     
-    std::string modulePath = current_token_.value;
-    advance();
+    std::string modulePath;
+    
+    if (current_token_.type == TokenType::StringLiteral) {
+        // String literal import (backward compatible)
+        modulePath = current_token_.value;
+        advance();
+    } else if (current_token_.type == TokenType::Identifier) {
+        // Package-style import (com.example.MyClass)
+        modulePath = current_token_.value;
+        advance();
+        
+        // Parse dotted package path
+        while (current_token_.type == TokenType::Dot) {
+            advance(); // consume '.'
+            if (current_token_.type != TokenType::Identifier && 
+                current_token_.type != TokenType::Star) {
+                error("Expected identifier or '*' after '.' in import path");
+            }
+            modulePath += ".";
+            modulePath += current_token_.value;
+            advance();
+        }
+    } else {
+        error("Expected module path after 'import' (string or package path)");
+    }
     
     // Optional semicolon
     match(TokenType::Semicolon);

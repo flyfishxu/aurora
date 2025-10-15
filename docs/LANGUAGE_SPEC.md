@@ -742,7 +742,7 @@ The `main` function:
 
 ---
 
-## 9. Built-in Functions & Module System
+## 9. Built-in Functions & Package System
 
 ### 9.1 Built-in Functions
 
@@ -764,56 +764,150 @@ fn main() {
 
 **Note**: No `extern` declaration is needed. The function is automatically registered by the compiler.
 
-### 9.2 Module System
+### 9.2 Package System
 
-AuroraLang supports modular programming through the `import` statement, allowing you to organize code across multiple files.
+AuroraLang supports a hierarchical package system similar to Java/Kotlin, allowing you to organize code in a structured namespace hierarchy.
 
-#### Import Syntax
+#### Package Declaration
 
 ```ebnf
-import_statement ::= "import" (string_literal | identifier) ";"?
+package_declaration ::= "package" package_name ";"?
+package_name ::= identifier ("." identifier)*
 ```
 
-#### Usage Examples
+**Syntax:**
+```aurora
+package com.example.myapp
 
-**Basic Import:**
+// Package members (functions, classes, etc.)
+fn myFunction() {
+    // ...
+}
+```
+
+**Rules:**
+- Package declaration must appear at the **beginning of the file**, before any imports or code
+- Package names follow reverse domain naming convention (e.g., `com.company.project`)
+- Package names map to directory structure: `com.example.app` → `com/example/app/`
+- Files in a package should be placed in the corresponding directory structure
+
+#### Import System
+
+AuroraLang supports multiple import styles for backward compatibility and flexibility.
+
+##### Import Syntax
+
+```ebnf
+import_statement ::= "import" (string_literal | package_path) ";"?
+package_path ::= identifier ("." identifier)*
+```
+
+##### Package-Style Imports (Recommended)
+
+```aurora
+package myapp
+
+import com.example.math.Calculator
+import com.example.utils.StringHelper
+
+fn main() {
+    // Use imported functions
+    let result = square(5)
+}
+```
+
+##### String-Based Imports (Legacy, Still Supported)
+
 ```aurora
 import "mymodule"        # Imports mymodule.aur from current directory
 import "lib/mathutils"   # Imports lib/mathutils.aur (relative path)
 ```
 
-**Module File** (`mathlib.aur`):
+#### Package Structure Example
+
+**Directory Structure:**
+```
+src/
+  com/
+    example/
+      math/
+        Calculator.aur
+        Functions.aur
+      utils/
+        StringHelper.aur
+  myapp/
+    Main.aur
+```
+
+**File: `com/example/math/Functions.aur`**
 ```aurora
-fn square(x: double) -> double {
+package com.example.math
+
+fn square(x: int) -> int {
     return x * x
 }
 
-fn cube(x: double) -> double {
+fn cube(x: int) -> int {
     return x * x * x
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
 }
 ```
 
-**Main File:**
+**File: `myapp/Main.aur`**
 ```aurora
-import "mathlib"
+package myapp
 
-fn main() {
-    printd(square(5.0))  # Prints: 25
-    printd(cube(3.0))    # Prints: 27
+import com.example.math.Functions
+
+fn main() -> int {
+    printd(square(5))      # Prints: 25
+    printd(cube(3))        # Prints: 27
+    printd(factorial(5))   # Prints: 120
     return 0
 }
 ```
 
 #### Module Resolution Rules
 
-1. **String Imports**: `import "path/to/module"` 
+1. **Package-Style Imports**: `import com.example.MyClass`
+   - Converts dots to slashes: `com.example.MyClass` → `com/example/MyClass.aur`
+   - Searches in package search paths (default: `.`, `src`, `stdlib/aurora`)
+   - Suitable for hierarchical package organization
+
+2. **String Imports**: `import "path/to/module"`
    - Relative or absolute file paths
    - `.aur` extension is added automatically if not present
+   - Searches relative to current file first
 
-2. **Identifier Imports**: `import mymodule`
+3. **Identifier Imports**: `import mymodule`
    - Searches for `mymodule.aur` in current directory
 
-3. **Circular Import Protection**: Modules are loaded only once, preventing infinite loops
+4. **Circular Import Protection**: Modules are loaded only once, preventing infinite loops
+
+#### Package Search Paths
+
+The compiler searches for packages in the following directories (in order):
+1. Current directory (`.`)
+2. Source directory (`src`)
+3. Standard library (`stdlib/aurora`)
+
+You can organize your project using standard package conventions:
+```
+myproject/
+  src/
+    com/
+      mycompany/
+        myapp/
+          Main.aur
+        utils/
+          Helper.aur
+```
 
 ### 9.3 External Declarations (Deprecated)
 

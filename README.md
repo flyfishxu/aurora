@@ -114,6 +114,32 @@ fn fibonacci(n: int) -> int {
 }
 ```
 
+### Package System
+
+```aurora
+// File: com/mycompany/math/Functions.aur
+package com.mycompany.math
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+```
+
+```aurora
+// File: Main.aur
+package myapp
+
+import com.mycompany.math.Functions
+
+fn main() -> int {
+    printd(factorial(5))  // Prints: 120
+    return 0
+}
+```
+
 ---
 
 ## 🌟 Vision

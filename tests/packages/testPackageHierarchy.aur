@@ -1,0 +1,27 @@
+// Test package hierarchy and multiple imports
+package test.hierarchy
+
+import com.aurora.math.Calculator
+import com.aurora.math.Functions
+
+fn main() -> int {
+    printd(40000)  // Test start marker
+    
+    // Test functions from Calculator.aur
+    let sq = square(7)
+    printd(sq)  // Should print 49
+    
+    // Test functions from Functions.aur  
+    let fact = factorial(5)
+    printd(fact)  // Should print 120
+    
+    let fib = fibonacci(7)
+    printd(fib)  // Should print 13
+    
+    let pow = power(2, 10)
+    printd(pow)  // Should print 1024
+    
+    printd(49999)  // Test end marker
+    return 0
+}
+

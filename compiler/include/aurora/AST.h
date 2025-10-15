@@ -584,6 +584,20 @@ private:
     bool isSingleton;  // true if declared with 'object' keyword
 };
 
+/// Package declaration
+class PackageDecl {
+public:
+    explicit PackageDecl(std::string name) : packageName(std::move(name)) {}
+    
+    const std::string& getPackageName() const { return packageName; }
+    
+    // Convert package name to file system path (com.example.app -> com/example/app)
+    std::string toPath() const;
+
+private:
+    std::string packageName;  // e.g., "com.example.myapp"
+};
+
 /// Import declaration
 class ImportDecl {
 public:
@@ -593,7 +607,8 @@ public:
     
     // Load and compile the imported module
     // currentFile: path to the file that contains this import (for relative path resolution)
-    bool load(const std::string& currentFile = "");
+    // currentPackage: the package of the file containing this import (for package-relative imports)
+    bool load(const std::string& currentFile = "", const std::string& currentPackage = "");
 
 private:
     std::string modulePath;

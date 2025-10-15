@@ -1,0 +1,13 @@
+// String helper functions in com.aurora.utils package
+package com.aurora.utils
+
+fn getLength(s: string) -> int {
+    // Placeholder - will be implemented when string type is fully supported
+    return 0
+}
+
+fn toUpperCase(s: string) -> string {
+    // Placeholder
+    return s
+}
+

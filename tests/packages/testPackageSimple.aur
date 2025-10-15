@@ -1,0 +1,20 @@
+// Test simple package import with functions (not classes)
+package test.simple
+
+// Import using package path
+import com.aurora.math.Calculator
+
+fn main() -> int {
+    printd(30000)  // Test start marker
+    
+    // Test calling imported functions directly
+    let result1 = square(5)
+    printd(result1)  // Should print 25
+    
+    let result2 = cube(3)
+    printd(result2)  // Should print 27
+    
+    printd(39999)  // Test end marker
+    return 0
+}
+
