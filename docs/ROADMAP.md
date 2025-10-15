@@ -53,7 +53,7 @@ AuroraLang aims to be the world's best programming language, combining:
 | ⚙️ **LLVM** | ~45% | ✅ IR generation, JIT compilation, Memory allocation, ARC<br>❌ Optimization pipeline, Vtables |
 | 🏗️ **Runtime** | ~75% | ✅ Array ops, Object ops, String ops, ARC (Automatic Reference Counting)<br>❌ Advanced memory management |
 | 📚 **Stdlib** | ~50% | ✅ Clean API design (Kotlin-inspired), Function overloading, Auto-import prelude<br>✅ Math utils, Array utils (sumOf, minOf), Conversion<br>✅ Comprehensive string methods<br>❌ Collections (generics required) |
-| 🛠️ **Tooling** | ~10% | ✅ CLI, VSCode syntax highlighting<br>❌ LSP, Package manager, Debugger |
+| 🛠️ **Tooling** | ~50% | ✅ CLI, VSCode syntax highlighting, LSP Server (go-to-def, hover, completion)<br>❌ Package manager, Debugger, Advanced refactoring |
 
 ---
 
@@ -116,6 +116,16 @@ AuroraLang aims to be the world's best programming language, combining:
 - **Debug Mode**: `--debug` flag for compiler internals
 - **Testing**: Comprehensive test suite (~30 tests)
 - **Build System**: Modular CMake with separate layer compilation
+- **LSP Support**: Language Server Protocol with three-layer architecture (Core, Server, Client)
+  - ✅ Hover information with type signatures
+  - ✅ Go-to-definition for functions, classes, methods
+  - ✅ Auto-completion for keywords, symbols
+  - ✅ Document symbols and workspace symbol search
+  - ✅ Real-time diagnostics
+  - ✅ VSCode extension with auto-discovery
+  - ⚠️ Find references (basic implementation)
+  - ❌ Code formatting (stub only)
+  - ❌ Rename symbol (not implemented)
 
 ### Architecture
 - **Four-Layer Separation**: Compiler, LLVM, Runtime (C), Stdlib (C++/Aurora)
@@ -151,6 +161,9 @@ AuroraLang aims to be the world's best programming language, combining:
 - ✅ Comprehensive string operations (length, charAt, substring, concat, trim, etc.)
 - ✅ Access modifier enforcement (pub/priv)
 - ✅ String utilities in stdlib (startsWith, endsWith, contains, replace, etc.)
+- ✅ LSP Server implementation (three-layer architecture)
+- ✅ Language Core library (reusable semantic analysis)
+- ✅ VSCode extension LSP client integration
 
 **Current Work**:
 - [ ] Array length property
@@ -206,9 +219,17 @@ AuroraLang aims to be the world's best programming language, combining:
    - Package repository
 
 2. **LSP & IDE Support** (Tooling):
-   - Autocomplete, go to definition, find references
-   - Hover documentation, signature help
-   - Diagnostics, code actions, refactoring
+   - ✅ Basic LSP server implementation (v0.6.3)
+   - ✅ Core language features (hover, definition, completion, document symbols)
+   - ✅ VSCode extension with LSP client integration and auto-discovery
+   - ✅ Real-time diagnostics and syntax error reporting
+   - ⚠️ Find references (basic, needs improvement for accuracy)
+   - [ ] Advanced features (signature help improvements, code actions, quick fixes)
+   - [ ] Semantic highlighting with token-based coloring
+   - [ ] Code formatting with configurable style
+   - [ ] Rename symbol across workspace
+   - [ ] Call hierarchy, type hierarchy
+   - [ ] Inlay hints for types and parameters
 
 3. **Testing Framework** (Tooling + Stdlib):
    - Test syntax: `#[test] fn test_name() { ... }`
@@ -282,7 +303,8 @@ AuroraLang aims to be the world's best programming language, combining:
 5. ✅ ~~Package system implementation~~ (v0.6.2) - Hierarchical package organization
 6. ✅ ~~String operations~~ (v0.6.3) - Comprehensive string methods
 7. ✅ ~~Access control enforcement~~ (v0.6.3) - pub/priv modifiers
-8. [ ] Array properties (planned - needs compiler support)
+8. ✅ ~~LSP Server~~ (v0.6.3) - Three-layer architecture with VSCode integration
+9. [ ] Array properties (planned - needs compiler support)
 
 ### Medium-Term (3-12 months)
 5. ✅ ~~Memory management implementation~~ (ARC completed)
@@ -335,7 +357,7 @@ AuroraLang aims to be the world's best programming language, combining:
 ### 🟢 Medium Priority Issues
 
 5. **No Operator Overloading** (needs traits) - v1.0
-6. **VSCode Extension Basic** (needs LSP) - v1.0
+6. ~~**VSCode Extension Basic**~~ ✅ (LSP implemented in v0.6.3)
 7. **No Documentation Comments** - v0.9
 8. **No Static Analysis/Linter** - v1.0
 
@@ -399,4 +421,4 @@ AuroraLang aims to be the world's best programming language, combining:
 - **18 months**: Ready for small production apps
 - **3 years**: Mature, production-ready with ecosystem
 
-**Current Focus**: We have completed v0.6.3 with comprehensive string operations and access control enforcement. Next focus is on error handling and improved type system features to reach v0.7.
+**Current Focus**: v0.6.3 is complete with comprehensive string operations, access control enforcement, and functional LSP server implementation. The language now has IDE support with go-to-definition, hover information, auto-completion, and real-time diagnostics. Next focus is on improving LSP accuracy (better location tracking for methods/fields), error handling types (Result/Option), and enhanced type system features to reach v0.7.

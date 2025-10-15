@@ -223,6 +223,8 @@ std::unique_ptr<Prototype> Parser::parsePrototype() {
         error("Expected function name");
     }
     std::string name = current_token_.value;
+    size_t funcLine = current_token_.line;
+    size_t funcColumn = current_token_.column;
     advance();
     
     expect(TokenType::LeftParen, "Expected '(' after function name");
@@ -265,6 +267,7 @@ std::unique_ptr<Prototype> Parser::parsePrototype() {
     }
     
     auto proto = std::make_unique<Prototype>(name, params, return_type);
+    proto->setLocation(funcLine, funcColumn);
     
     // Note: We don't store prototypes in the map anymore to avoid memory issues
     // Type information is tracked through the Type system instead
@@ -973,6 +976,8 @@ std::unique_ptr<ClassDecl> Parser::parseClassOrObject(bool isSingleton) {
         error("Expected class/object name");
     }
     std::string className = current_token_.value;
+    size_t classLine = current_token_.line;
+    size_t classColumn = current_token_.column;
     advance();
     
     // Register class type early so it can be used in later function declarations
@@ -1098,6 +1103,7 @@ std::unique_ptr<ClassDecl> Parser::parseClassOrObject(bool isSingleton) {
     
     // Create class declaration with singleton flag
     auto classDecl = std::make_unique<ClassDecl>(className, std::move(fields), std::move(methods), isSingleton);
+    classDecl->setLocation(classLine, classColumn);
     
     // Generate implicit constructor if no explicit constructor found
     classDecl->generateImplicitConstructor();

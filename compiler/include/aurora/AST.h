@@ -495,18 +495,24 @@ struct Parameter {
 class Prototype {
 public:
     Prototype(std::string n, std::vector<Parameter> p, std::shared_ptr<Type> r)
-        : name(std::move(n)), params(std::move(p)), returnType(std::move(r)) {}
+        : name(std::move(n)), params(std::move(p)), returnType(std::move(r)), line_(0), column_(0) {}
     
     llvm::Function* codegen();
     
     const std::string& getName() const { return name; }
     const std::vector<Parameter>& getParams() const { return params; }
     std::shared_ptr<Type> getReturnType() const { return returnType; }
+    
+    void setLocation(size_t line, size_t col) { line_ = line; column_ = col; }
+    size_t getLine() const { return line_; }
+    size_t getColumn() const { return column_; }
 
 private:
     std::string name;
     std::vector<Parameter> params;
     std::shared_ptr<Type> returnType;
+    size_t line_;
+    size_t column_;
 };
 
 /// Function definition
@@ -558,7 +564,7 @@ struct MethodDecl {
 class ClassDecl {
 public:
     ClassDecl(std::string n, std::vector<FieldDecl> f, std::vector<MethodDecl> m, bool isObj = false)
-        : name(std::move(n)), fields(std::move(f)), methods(std::move(m)), isSingleton(isObj) {}
+        : name(std::move(n)), fields(std::move(f)), methods(std::move(m)), isSingleton(isObj), line_(0), column_(0) {}
     
     llvm::Type* codegen();
     void codegenMethods();
@@ -567,6 +573,10 @@ public:
     const std::vector<FieldDecl>& getFields() const { return fields; }
     const std::vector<MethodDecl>& getMethods() const { return methods; }
     bool isObjectSingleton() const { return isSingleton; }
+    
+    void setLocation(size_t line, size_t col) { line_ = line; column_ = col; }
+    size_t getLine() const { return line_; }
+    size_t getColumn() const { return column_; }
     
     // Helper methods
     FieldDecl* findField(const std::string& fieldName);
@@ -582,6 +592,8 @@ private:
     std::vector<FieldDecl> fields;
     std::vector<MethodDecl> methods;
     bool isSingleton;  // true if declared with 'object' keyword
+    size_t line_;
+    size_t column_;
 };
 
 /// Package declaration

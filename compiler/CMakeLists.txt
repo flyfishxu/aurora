@@ -16,6 +16,7 @@ set(AURORA_COMPILER_SOURCES
   src/diagnostic/Diagnostic.cpp
   src/logger/Logger.cpp
   src/utils/CrashHandler.cpp
+  src/core/LanguageCore.cpp
 )
 
 # Create compiler library

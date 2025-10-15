@@ -8,10 +8,11 @@ This guide is for developers who want to contribute to AuroraLang or understand 
 
 1. [Development Setup](#development-setup)
 2. [Project Architecture](#project-architecture)
-3. [Debugging Tools](#debugging-tools)
-4. [Contributing Guidelines](#contributing-guidelines)
-5. [Testing](#testing)
-6. [Documentation](#documentation)
+3. [LSP Architecture](#lsp-architecture)
+4. [Debugging Tools](#debugging-tools)
+5. [Contributing Guidelines](#contributing-guidelines)
+6. [Testing](#testing)
+7. [Documentation](#documentation)
 
 ---
 
@@ -105,6 +106,257 @@ The compiler's code generation is split into specialized modules:
 - **ArrayCodeGen.cpp** (200 lines) - Array generation
 
 This modular design makes the codebase easier to navigate and maintain.
+
+---
+
+## LSP Architecture
+
+AuroraLang implements Language Server Protocol (LSP) support using a three-layer architecture to ensure modularity, reusability, and maintainability.
+
+### Three-Layer Design
+
+```
+┌─────────────────────────────────────────────────┐
+│            IDE Client / Extension               │  TypeScript
+│       (VSCode, thin client layer)               │  
+├─────────────────────────────────────────────────┤
+│             LSP Server (Protocol)               │  C++
+│    (JSON-RPC, Protocol Adaptation Layer)        │  
+├─────────────────────────────────────────────────┤
+│          Language Core (Reusable)               │  C++
+│  (Lexer, Parser, Semantic Analysis, Index)      │  
+└─────────────────────────────────────────────────┘
+```
+
+### Layer 1: Language Core (Reusable Library)
+
+**Location**: `compiler/src/core/LanguageCore.cpp`
+
+**Responsibilities**:
+- Lexical and syntax analysis
+- Semantic analysis and type checking
+- Symbol indexing
+- Error diagnostics
+- Code formatting (future)
+- Linting (future)
+
+**Key Features**:
+- **No I/O**: All file operations abstracted
+- **No Protocol**: Pure language semantics
+- **Reusable**: Used by both CLI compiler and LSP server
+- **Thread-safe**: Immutable data structures
+
+**Example**:
+```cpp
+LanguageCore core;
+core.setSource("file.aur", sourceCode);
+core.analyze("file.aur");
+auto diagnostics = core.getDiagnostics("file.aur");
+auto symbols = core.getSymbols("file.aur");
+```
+
+### Layer 2: LSP Server (Protocol Adapter)
+
+**Location**: `tools/aurora-lsp/src/LSPServer.cpp`
+
+**Responsibilities**:
+- JSON-RPC message handling
+- LSP protocol compliance
+- Document synchronization
+- Capability negotiation
+- Protocol-level caching
+
+**Key Features**:
+- **Standalone process**: Runs as separate process with `--stdio`
+- **Incremental updates**: Efficient document synchronization
+- **Cancellation**: Supports request cancellation
+- **No semantics**: All language logic delegated to Core
+
+**Supported LSP Features**:
+- `textDocument/hover` - Type information
+- `textDocument/definition` - Go to definition
+- `textDocument/references` - Find references
+- `textDocument/completion` - Auto-completion
+- `textDocument/documentSymbol` - Document outline
+- `workspace/symbol` - Workspace symbols
+- `textDocument/publishDiagnostics` - Error reporting
+- `textDocument/formatting` - Code formatting
+
+**Example**:
+```bash
+# Start LSP server
+aurora-lsp --stdio
+```
+
+### Layer 3: IDE Client (Thin Client)
+
+**Location**: `vscode-extension/src/lspClient.ts`
+
+**Responsibilities**:
+- Start/stop LSP server
+- Forward LSP requests
+- Render results in UI
+- Configuration management
+
+**Key Features**:
+- **Minimal logic**: No language semantics
+- **Auto-discovery**: Finds LSP server automatically
+- **Fallback mode**: Uses built-in providers if LSP unavailable
+- **Configuration**: User-configurable server path
+
+**Configuration**:
+```json
+{
+  "auroralang.enableLSP": true,
+  "auroralang.lspServerPath": "/path/to/aurora-lsp"
+}
+```
+
+### Development Principles
+
+#### 1. Strict Layer Separation
+
+**Core Layer Rules**:
+- ❌ NO file I/O (use callbacks/VFS)
+- ❌ NO protocol knowledge (JSON-RPC, LSP)
+- ❌ NO global state / singletons (except logger)
+- ✅ Pure language semantics
+- ✅ Reusable by CLI and LSP
+- ✅ Thread-safe operations
+
+**LSP Server Rules**:
+- ❌ NO language semantics (delegate to Core)
+- ❌ NO business logic duplication
+- ✅ Protocol handling only
+- ✅ Efficient caching
+- ✅ Proper error handling
+
+**Client Rules**:
+- ❌ NO language analysis
+- ❌ NO complex logic
+- ✅ UI rendering only
+- ✅ Configuration management
+- ✅ Server lifecycle management
+
+#### 2. Common Pitfalls to Avoid
+
+**❌ Bad: Mixing I/O in Core**
+```cpp
+// DON'T DO THIS
+class LanguageCore {
+    void analyze(const std::string& filename) {
+        std::ifstream file(filename);  // ❌ Direct I/O
+        // ...
+    }
+};
+```
+
+**✅ Good: Abstract I/O**
+```cpp
+// DO THIS
+class LanguageCore {
+    void setSource(const std::string& filename, 
+                   const std::string& source) {
+        // ✅ Source provided by caller
+    }
+};
+```
+
+**❌ Bad: Duplicating Semantics in LSP**
+```cpp
+// DON'T DO THIS
+json LSPServer::handleHover(...) {
+    // ❌ Implementing type checking here
+    if (isFunction()) { ... }
+}
+```
+
+**✅ Good: Delegate to Core**
+```cpp
+// DO THIS
+json LSPServer::handleHover(...) {
+    auto hover = core_.getHover(...);  // ✅ Delegate
+    return hoverToLSP(hover);
+}
+```
+
+#### 3. Error Handling
+
+All errors use the unified `Diagnostic` system:
+
+```cpp
+struct Diagnostic {
+    DiagnosticLevel level;  // Error, Warning, Note
+    std::string code;       // Error code (e.g., "E001")
+    std::string message;
+    SourceLocation location;
+    std::vector<std::string> suggestions;
+};
+```
+
+**Benefits**:
+- Consistent error format
+- Easy LSP conversion
+- Actionable suggestions
+- Structured diagnostics
+
+#### 4. Testing Strategy
+
+**Unit Tests** (Future):
+- Test Core independently
+- Mock I/O dependencies
+- Fast, isolated tests
+
+**Integration Tests**:
+- Test LSP server with real messages
+- Verify protocol compliance
+- End-to-end validation
+
+**IDE Tests**:
+- Extension activation
+- Command execution
+- UI rendering
+
+### Building and Running LSP
+
+**Build**:
+```bash
+cd build
+cmake ..
+make -j8
+# LSP server at: build/tools/aurora-lsp/aurora-lsp
+```
+
+**Run Standalone**:
+```bash
+./build/tools/aurora-lsp/aurora-lsp --stdio
+```
+
+**Use in VSCode**:
+1. Build LSP server
+2. Open workspace in VSCode
+3. Extension auto-discovers server
+4. LSP features activate automatically
+
+**Verify LSP is Active**:
+Check VSCode Output panel → "AuroraLang LSP"
+
+### Future Enhancements
+
+- [ ] Signature help completion
+- [ ] Rename refactoring
+- [ ] Code actions (quick fixes)
+- [ ] Semantic highlighting
+- [ ] Call hierarchy
+- [ ] Type hierarchy
+- [ ] Inlay hints
+- [ ] Code lens
+
+### References
+
+- [LSP Specification](https://microsoft.github.io/language-server-protocol/)
+- [VSCode LSP Guide](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide)
+- [Language Core API](../compiler/include/aurora/LanguageCore.h)
 
 ---
 

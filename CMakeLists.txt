@@ -47,6 +47,7 @@ add_subdirectory(runtime)      # Runtime layer (C)
 add_subdirectory(compiler)     # Compiler layer (C++)
 add_subdirectory(stdlib)       # Standard library layer (C++)
 add_subdirectory(tools/aurora-cli)  # Aurora CLI tool
+add_subdirectory(tools/aurora-lsp)  # Aurora LSP Server
 
 # Summary message
 message(STATUS "")
@@ -61,6 +62,7 @@ message(STATUS "  ✓ Runtime Layer")
 message(STATUS "  ✓ Compiler Layer")
 message(STATUS "  ✓ Standard Library Layer")
 message(STATUS "  ✓ Aurora CLI")
+message(STATUS "  ✓ Aurora LSP Server")
 message(STATUS "")
 message(STATUS "Output:")
 message(STATUS "  Executable: ${CMAKE_BINARY_DIR}/aurora")
