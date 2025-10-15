@@ -17,8 +17,8 @@ using namespace aurora;
 // Version information
 #define AURORA_VERSION_MAJOR 0
 #define AURORA_VERSION_MINOR 6
-#define AURORA_VERSION_PATCH 2
-#define AURORA_VERSION "0.6.2"
+#define AURORA_VERSION_PATCH 3
+#define AURORA_VERSION "0.6.3"
 
 std::string loadFile(const std::string& path) {
     std::ifstream file(path);

@@ -1,26 +1,100 @@
 // AuroraLang Standard Library - String Utilities
-// Helper functions for working with strings
+// Comprehensive string manipulation functions
 
-// Note: String operations are currently limited as the language
-// doesn't yet have full string support. This file will be expanded
-// as string features are implemented.
+// External string operations (provided by C++ stdlib)
+extern stringLength(str: string) -> int
+extern stringCharAt(str: string, index: int) -> int
+extern stringConcat(a: string, b: string) -> string
+extern stringSubstring(str: string, start: int, end: int) -> string
+extern stringCompare(a: string, b: string) -> int
+extern stringEquals(a: string, b: string) -> bool
+extern stringTrim(str: string) -> string
+extern stringTrimStart(str: string) -> string
+extern stringTrimEnd(str: string) -> string
+extern stringStartsWith(str: string, prefix: string) -> bool
+extern stringEndsWith(str: string, suffix: string) -> bool
+extern stringContains(str: string, substr: string) -> bool
+extern stringIndexOf(str: string, substr: string) -> int
+extern stringLastIndexOf(str: string, substr: string) -> int
+extern stringToUpper(str: string) -> string
+extern stringToLower(str: string) -> string
+extern stringReplace(str: string, from: string, to: string) -> string
+extern stringRepeat(str: string, count: int) -> string
+extern stringToInt(str: string) -> int
+extern stringToDouble(str: string) -> double
+extern intToString(value: int) -> string
+extern doubleToString(value: double) -> string
+extern boolToString(value: bool) -> string
 
-// Future functions:
-// - string concatenation
-// - string length
-// - substring
-// - string comparison
-// - to_upper / to_lower
-// - split / join
-// - trim
-// - contains / starts_with / ends_with
-// - replace
-// - char_at
-// - string formatting
-
-// Placeholder for future string implementations
-fn string_placeholder() -> void {
-    return
+// Wrapper functions for convenience
+fn length(str: string) -> int {
+    return stringLength(str)
 }
 
+fn charAt(str: string, index: int) -> int {
+    return stringCharAt(str, index)
+}
 
+fn concat(a: string, b: string) -> string {
+    return stringConcat(a, b)
+}
+
+fn substring(str: string, start: int, end: int) -> string {
+    return stringSubstring(str, start, end)
+}
+
+fn trim(str: string) -> string {
+    return stringTrim(str)
+}
+
+fn trimStart(str: string) -> string {
+    return stringTrimStart(str)
+}
+
+fn trimEnd(str: string) -> string {
+    return stringTrimEnd(str)
+}
+
+fn startsWith(str: string, prefix: string) -> bool {
+    return stringStartsWith(str, prefix)
+}
+
+fn endsWith(str: string, suffix: string) -> bool {
+    return stringEndsWith(str, suffix)
+}
+
+fn contains(str: string, substr: string) -> bool {
+    return stringContains(str, substr)
+}
+
+fn indexOf(str: string, substr: string) -> int {
+    return stringIndexOf(str, substr)
+}
+
+fn lastIndexOf(str: string, substr: string) -> int {
+    return stringLastIndexOf(str, substr)
+}
+
+fn toUpper(str: string) -> string {
+    return stringToUpper(str)
+}
+
+fn toLower(str: string) -> string {
+    return stringToLower(str)
+}
+
+fn replace(str: string, from: string, to: string) -> string {
+    return stringReplace(str, from, to)
+}
+
+fn repeat(str: string, count: int) -> string {
+    return stringRepeat(str, count)
+}
+
+fn isEmpty(str: string) -> bool {
+    return stringLength(str) == 0
+}
+
+fn isBlank(str: string) -> bool {
+    return stringLength(stringTrim(str)) == 0
+}

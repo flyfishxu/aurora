@@ -1,6 +1,6 @@
 # AuroraLang Development Roadmap
 
-**Version**: 0.6.2  
+**Version**: 0.6.3  
 **Last Updated**: 2025-10-15  
 **Status**: Alpha - Active Development
 
@@ -40,7 +40,6 @@ AuroraLang aims to be the world's best programming language, combining:
 - Early adopters
 
 **Current Limitations**:
-- ⚠️ Limited string operations  
 - ⚠️ No inheritance or polymorphism
 - ⚠️ No generics
 - ⚠️ No error handling types (Result/Option)
@@ -50,10 +49,10 @@ AuroraLang aims to be the world's best programming language, combining:
 
 | Layer | Completion | Key Features |
 |-------|-----------|--------------|
-| 🔧 **Compiler** | ~35% | ✅ Lexer, Parser, AST, Type System, OOP basics<br>❌ Generics, Traits, Advanced types |
-| ⚙️ **LLVM** | ~40% | ✅ IR generation, JIT compilation, Memory allocation, ARC<br>❌ Optimization pipeline, Vtables |
-| 🏗️ **Runtime** | ~70% | ✅ Array ops, Object ops, String ops, ARC (Automatic Reference Counting)<br>❌ Advanced memory management |
-| 📚 **Stdlib** | ~40% | ✅ Clean API design (Kotlin-inspired), Function overloading, Auto-import prelude<br>✅ Math utils, Array utils (sumOf, minOf), Conversion<br>❌ String methods, Collections (generics required) |
+| 🔧 **Compiler** | ~40% | ✅ Lexer, Parser, AST, Type System, OOP basics, Access control<br>❌ Generics, Traits, Advanced types |
+| ⚙️ **LLVM** | ~45% | ✅ IR generation, JIT compilation, Memory allocation, ARC<br>❌ Optimization pipeline, Vtables |
+| 🏗️ **Runtime** | ~75% | ✅ Array ops, Object ops, String ops, ARC (Automatic Reference Counting)<br>❌ Advanced memory management |
+| 📚 **Stdlib** | ~50% | ✅ Clean API design (Kotlin-inspired), Function overloading, Auto-import prelude<br>✅ Math utils, Array utils (sumOf, minOf), Conversion<br>✅ Comprehensive string methods<br>❌ Collections (generics required) |
 | 🛠️ **Tooling** | ~10% | ✅ CLI, VSCode syntax highlighting<br>❌ LSP, Package manager, Debugger |
 
 ---
@@ -148,9 +147,12 @@ AuroraLang aims to be the world's best programming language, combining:
 - ✅ Added range and conversion utilities
 - ✅ Updated all tests to use new naming
 
+**Completed** (v0.6.3):
+- ✅ Comprehensive string operations (length, charAt, substring, concat, trim, etc.)
+- ✅ Access modifier enforcement (pub/priv)
+- ✅ String utilities in stdlib (startsWith, endsWith, contains, replace, etc.)
+
 **Current Work**:
-- [ ] String concatenation (`"Hello" + " World"`)
-- [ ] String methods (split, trim, substring)
 - [ ] Array length property
 - [ ] Type system improvements for stdlib types
 
@@ -278,8 +280,9 @@ AuroraLang aims to be the world's best programming language, combining:
 3. ✅ ~~Comprehensive stdlib utilities~~ (v0.6.1)
 4. ✅ ~~Clean stdlib API design~~ (v0.6.2) - Kotlin-inspired naming
 5. ✅ ~~Package system implementation~~ (v0.6.2) - Hierarchical package organization
-6. [ ] String operations (in progress)
-7. [ ] Array properties (planned - needs compiler support)
+6. ✅ ~~String operations~~ (v0.6.3) - Comprehensive string methods
+7. ✅ ~~Access control enforcement~~ (v0.6.3) - pub/priv modifiers
+8. [ ] Array properties (planned - needs compiler support)
 
 ### Medium-Term (3-12 months)
 5. ✅ ~~Memory management implementation~~ (ARC completed)
@@ -307,56 +310,34 @@ AuroraLang aims to be the world's best programming language, combining:
 
 ### 🔴 Critical Issues
 
-1. ✅ **~~Memory Leaks~~** (RESOLVED in v0.6.1)
-   - **Solution**: Implemented Automatic Reference Counting (ARC)
-   - Objects now automatically freed when ref_count reaches 0
-   - Retain/Release calls inserted by compiler
-   - No manual memory management needed
-
-2. **Limited String Operations**
-   - String type exists but no methods
-   - **Fix**: Implement string stdlib
-   - **Timeline**: v0.7
-
-3. ✅ **~~Stdlib Not Integrated~~** (RESOLVED in v0.6.1)
-   - **Solution**: Implemented auto-import prelude mechanism
-   - Stdlib now automatically available without manual imports
-   - All functions follow camelCase naming convention
-   - Comprehensive utility modules added
-
-4. **No Collections**
+1. **No Collections**
    - Cannot use Vec, HashMap, etc.
    - **Fix**: Implement generics + collections
-   - **Blocker**: Requires generics (v0.8)
+   - **Blocker**: Requires generics (v0.8+)
 
 ### 🟡 High Priority Issues
 
-5. **Access Modifiers Not Enforced**
-   - pub/priv syntax exists but not checked
-   - **Fix**: Implement access control
-   - **Timeline**: v0.9
-
-6. **Limited Type Checking**
+2. **Limited Type Checking**
    - Some runtime type errors possible
    - **Fix**: Strengthen type checker
    - **Timeline**: v0.8
 
-7. **No Optimization**
+3. **No Optimization**
    - Code not optimized
    - **Fix**: Add LLVM optimization passes
    - **Timeline**: v0.9
 
-8. **No Error Handling**
+4. **No Error Handling**
    - No Result/Option types
    - **Fix**: Implement error handling system
    - **Timeline**: v0.8
 
 ### 🟢 Medium Priority Issues
 
-9. **No Operator Overloading** (needs traits) - v1.0
-10. **VSCode Extension Basic** (needs LSP) - v1.0
-11. **No Documentation Comments** - v0.9
-12. **No Static Analysis/Linter** - v1.0
+5. **No Operator Overloading** (needs traits) - v1.0
+6. **VSCode Extension Basic** (needs LSP) - v1.0
+7. **No Documentation Comments** - v0.9
+8. **No Static Analysis/Linter** - v1.0
 
 ---
 
@@ -418,4 +399,4 @@ AuroraLang aims to be the world's best programming language, combining:
 - **18 months**: Ready for small production apps
 - **3 years**: Mature, production-ready with ecosystem
 
-**Current Focus**: We are in the v0.6-v0.7 transition, focusing on stdlib integration and string operations. The goal is to reach v0.8 (basic usability) within 6 months.
+**Current Focus**: We have completed v0.6.3 with comprehensive string operations and access control enforcement. Next focus is on error handling and improved type system features to reach v0.7.

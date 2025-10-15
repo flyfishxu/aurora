@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.20)
 # Main aurora executable
 add_executable(aurora src/main.cpp)
 
+# Output executable to build root directory for convenience
+set_target_properties(aurora PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
 # Link all libraries
 target_link_libraries(aurora PRIVATE
   aurora_compiler

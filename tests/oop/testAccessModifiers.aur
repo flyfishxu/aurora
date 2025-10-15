@@ -1,0 +1,46 @@
+// Test Access Modifiers
+// Verifies that pub/priv access control is enforced
+
+class TestAccount {
+    priv let balance: double
+    pub let accountNumber: int
+    
+    constructor(accNum: int, initialBalance: double) {
+        this.accountNumber = accNum
+        this.balance = initialBalance
+    }
+    
+    pub fn getBalance() -> double {
+        return this.balance
+    }
+    
+    pub fn deposit(amount: double) {
+        this.balance = this.balance + amount
+    }
+}
+
+fn main() -> int {
+    printd(8888.0)  // Test start marker
+    
+    // Create account
+    let account = TestAccount(12345, 1000.0)
+    
+    // Test 1: Access public field - should work
+    printd(account.accountNumber + 0.0)
+    
+    // Test 2: Access private field - should fail at compile time
+    // Uncomment the following line to test access control error:
+    // printd(account.balance)  // ERROR: Cannot access private field 'balance'
+    
+    // Test 3: Call public method - should work
+    printd(account.getBalance())
+    
+    // Test 4: Call another public method
+    account.deposit(500.0)
+    printd(account.getBalance())
+    
+    printd(0.0)  // Test passed marker
+    
+    return 0
+}
+

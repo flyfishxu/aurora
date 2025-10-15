@@ -29,6 +29,13 @@ import "../collections/array"
 // import "../collections/bitwise"
 
 // ============================================================================
+// String Utilities
+// ============================================================================
+
+// String utilities will be added after proper extern function registration
+// import "../string/string_utils"
+
+// ============================================================================
 // Built-in Functions (Provided by Runtime)
 // ============================================================================
 

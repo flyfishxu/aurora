@@ -85,6 +85,9 @@ llvm::Value* MemberAccessExpr::codegen() {
             return logError(("Field not found: " + member + " in class " + className).c_str());
         }
         
+        // Access control check - accessing from within the same class (via 'this')
+        // Always allowed for internal access via 'this'
+        
         // Get field index
         size_t fieldIndex = 0;
         for (const auto& f : classDecl->getFields()) {
@@ -142,6 +145,32 @@ llvm::Value* MemberAccessExpr::codegen() {
         FieldDecl* field = classDecl->findField(member);
         if (!field) {
             return logError(("Field not found: " + member + " in class " + classType->getName()).c_str());
+        }
+        
+        // Access control check - accessing from outside the class
+        if (!field->isPublic) {
+            // Check if we're accessing from within the same class
+            llvm::BasicBlock* currentBlock = ctx.getBuilder().GetInsertBlock();
+            bool isInternalAccess = false;
+            
+            if (currentBlock) {
+                llvm::Function* currentFunc = currentBlock->getParent();
+                if (currentFunc) {
+                    std::string funcName = std::string(currentFunc->getName());
+                    size_t underscorePos = funcName.find('_');
+                    if (underscorePos != std::string::npos) {
+                        std::string currentClassName = funcName.substr(0, underscorePos);
+                        if (currentClassName == classType->getName()) {
+                            isInternalAccess = true;
+                        }
+                    }
+                }
+            }
+            
+            if (!isInternalAccess) {
+                return logError(("Cannot access private field '" + member + 
+                               "' from class " + classType->getName()).c_str(), "E3005");
+            }
         }
         
         // Get field index
@@ -242,6 +271,32 @@ llvm::Value* MemberCallExpr::codegen() {
     MethodDecl* methodDecl = classDecl->findMethod(method);
     if (!methodDecl) {
         return logError(("Method not found: " + method).c_str());
+    }
+    
+    // Access control check - accessing method from outside the class
+    if (!methodDecl->isPublic) {
+        // Check if we're accessing from within the same class
+        llvm::BasicBlock* currentBlock = ctx.getBuilder().GetInsertBlock();
+        bool isInternalAccess = false;
+        
+        if (currentBlock) {
+            llvm::Function* currentFunc = currentBlock->getParent();
+            if (currentFunc) {
+                std::string funcName = std::string(currentFunc->getName());
+                size_t underscorePos = funcName.find('_');
+                if (underscorePos != std::string::npos) {
+                    std::string currentClassName = funcName.substr(0, underscorePos);
+                    if (currentClassName == classType->getName()) {
+                        isInternalAccess = true;
+                    }
+                }
+            }
+        }
+        
+        if (!isInternalAccess) {
+            return logError(("Cannot access private method '" + method + 
+                           "' from class " + classType->getName()).c_str(), "E3006");
+        }
     }
     
     // Look up the function

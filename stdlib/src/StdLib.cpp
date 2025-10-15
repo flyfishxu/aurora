@@ -109,14 +109,202 @@ extern "C" {
         return result;
     }
     
+    char aurora_string_char_at(const char* str, int64_t index) {
+        if (!str) return '\0';
+        int64_t len = static_cast<int64_t>(strlen(str));
+        if (index < 0 || index >= len) return '\0';
+        return str[index];
+    }
+    
+    char* aurora_string_trim(const char* str) {
+        if (!str) return nullptr;
+        
+        const char* start = str;
+        while (*start && std::isspace(static_cast<unsigned char>(*start))) {
+            start++;
+        }
+        
+        if (*start == '\0') {
+            char* result = new char[1];
+            result[0] = '\0';
+            return result;
+        }
+        
+        const char* end = str + strlen(str) - 1;
+        while (end > start && std::isspace(static_cast<unsigned char>(*end))) {
+            end--;
+        }
+        
+        size_t len = end - start + 1;
+        char* result = new char[len + 1];
+        strncpy(result, start, len);
+        result[len] = '\0';
+        
+        return result;
+    }
+    
+    char* aurora_string_trim_start(const char* str) {
+        if (!str) return nullptr;
+        
+        const char* start = str;
+        while (*start && std::isspace(static_cast<unsigned char>(*start))) {
+            start++;
+        }
+        
+        size_t len = strlen(start);
+        char* result = new char[len + 1];
+        strcpy(result, start);
+        
+        return result;
+    }
+    
+    char* aurora_string_trim_end(const char* str) {
+        if (!str) return nullptr;
+        
+        size_t len = strlen(str);
+        if (len == 0) {
+            char* result = new char[1];
+            result[0] = '\0';
+            return result;
+        }
+        
+        const char* end = str + len - 1;
+        while (end >= str && std::isspace(static_cast<unsigned char>(*end))) {
+            end--;
+        }
+        
+        len = end - str + 1;
+        char* result = new char[len + 1];
+        strncpy(result, str, len);
+        result[len] = '\0';
+        
+        return result;
+    }
+    
+    int aurora_string_starts_with(const char* str, const char* prefix) {
+        if (!str || !prefix) return 0;
+        size_t str_len = strlen(str);
+        size_t prefix_len = strlen(prefix);
+        if (prefix_len > str_len) return 0;
+        return strncmp(str, prefix, prefix_len) == 0 ? 1 : 0;
+    }
+    
+    int aurora_string_ends_with(const char* str, const char* suffix) {
+        if (!str || !suffix) return 0;
+        size_t str_len = strlen(str);
+        size_t suffix_len = strlen(suffix);
+        if (suffix_len > str_len) return 0;
+        return strcmp(str + str_len - suffix_len, suffix) == 0 ? 1 : 0;
+    }
+    
+    int aurora_string_contains(const char* str, const char* substr) {
+        if (!str || !substr) return 0;
+        return strstr(str, substr) != nullptr ? 1 : 0;
+    }
+    
+    int64_t aurora_string_index_of(const char* str, const char* substr) {
+        if (!str || !substr) return -1;
+        const char* found = strstr(str, substr);
+        if (!found) return -1;
+        return static_cast<int64_t>(found - str);
+    }
+    
+    int64_t aurora_string_last_index_of(const char* str, const char* substr) {
+        if (!str || !substr) return -1;
+        
+        const char* last_found = nullptr;
+        const char* current = str;
+        
+        while ((current = strstr(current, substr)) != nullptr) {
+            last_found = current;
+            current++;
+        }
+        
+        if (!last_found) return -1;
+        return static_cast<int64_t>(last_found - str);
+    }
+    
+    char* aurora_string_to_upper(const char* str) {
+        if (!str) return nullptr;
+        
+        size_t len = strlen(str);
+        char* result = new char[len + 1];
+        
+        for (size_t i = 0; i < len; i++) {
+            result[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(str[i])));
+        }
+        result[len] = '\0';
+        
+        return result;
+    }
+    
+    char* aurora_string_to_lower(const char* str) {
+        if (!str) return nullptr;
+        
+        size_t len = strlen(str);
+        char* result = new char[len + 1];
+        
+        for (size_t i = 0; i < len; i++) {
+            result[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(str[i])));
+        }
+        result[len] = '\0';
+        
+        return result;
+    }
+    
+    char* aurora_string_replace(const char* str, const char* from, const char* to) {
+        if (!str || !from || !to) return nullptr;
+        
+        std::string s = str;
+        size_t from_len = strlen(from);
+        size_t to_len = strlen(to);
+        size_t pos = 0;
+        
+        while ((pos = s.find(from, pos)) != std::string::npos) {
+            s.replace(pos, from_len, to);
+            pos += to_len;
+        }
+        
+        char* result = new char[s.length() + 1];
+        strcpy(result, s.c_str());
+        return result;
+    }
+    
+    char* aurora_string_repeat(const char* str, int64_t count) {
+        if (!str || count <= 0) {
+            char* result = new char[1];
+            result[0] = '\0';
+            return result;
+        }
+        
+        size_t len = strlen(str);
+        size_t total_len = len * count;
+        char* result = new char[total_len + 1];
+        
+        for (int64_t i = 0; i < count; i++) {
+            strcpy(result + (i * len), str);
+        }
+        result[total_len] = '\0';
+        
+        return result;
+    }
+    
     int64_t aurora_string_to_int(const char* str) {
         if (!str) return 0;
-        return static_cast<int64_t>(std::stoll(str));
+        try {
+            return static_cast<int64_t>(std::stoll(str));
+        } catch (...) {
+            return 0;
+        }
     }
     
     double aurora_string_to_double(const char* str) {
         if (!str) return 0.0;
-        return std::stod(str);
+        try {
+            return std::stod(str);
+        } catch (...) {
+            return 0.0;
+        }
     }
     
     char* aurora_int_to_string(int64_t value) {
@@ -130,6 +318,13 @@ extern "C" {
         std::string str = std::to_string(value);
         char* result = new char[str.length() + 1];
         strcpy(result, str.c_str());
+        return result;
+    }
+    
+    char* aurora_bool_to_string(int value) {
+        const char* str = value ? "true" : "false";
+        char* result = new char[strlen(str) + 1];
+        strcpy(result, str);
         return result;
     }
     

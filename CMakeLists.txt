@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(AuroraLang VERSION 0.6.0 LANGUAGES C CXX)
+project(AuroraLang VERSION 0.6.3 LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -63,6 +63,6 @@ message(STATUS "  ✓ Standard Library Layer")
 message(STATUS "  ✓ Aurora CLI")
 message(STATUS "")
 message(STATUS "Output:")
-message(STATUS "  Executable: ${CMAKE_BINARY_DIR}/tools/aurora-cli/aurora")
+message(STATUS "  Executable: ${CMAKE_BINARY_DIR}/aurora")
 message(STATUS "")
 
