@@ -39,14 +39,17 @@ AuroraLang now supports object-oriented programming, including classes, fields, 
 ### Syntax
 
 ```ebnf
-class_declaration ::= "class" identifier "{" class_member* "}"
+class_declaration ::= "class" identifier [primary_constructor_params] "{" class_member* "}"
+
+primary_constructor_params ::= "(" [param ("," param)*] ")"
+param ::= ["priv"] ("let" | "var") identifier ":" type
 
 class_member ::= field_declaration
                | method_declaration
                | constructor_declaration
 ```
 
-### Example
+### Example: Traditional Syntax
 
 ```aurora
 class Point {
@@ -64,6 +67,18 @@ class Point {
 }
 ```
 
+### Example: Primary Constructor (Recommended)
+
+```aurora
+class Point(let x: double, let y: double) {
+    fn getX() -> double {
+        return this.x
+    }
+}
+```
+
+The primary constructor syntax is more concise and eliminates repetitive field initialization code.
+
 ---
 
 ## Fields
@@ -73,8 +88,10 @@ Fields are member variables of a class that store the object's state.
 ### Syntax
 
 ```ebnf
-field_declaration ::= ["pub" | "priv"] ("let" | "var") identifier ":" type ["=" expression] ";"?
+field_declaration ::= ["priv"] ("let" | "var") identifier ":" type ["=" expression] ";"?
 ```
+
+**Note**: The `pub` modifier is redundant and should be omitted (members are public by default).
 
 ### Features
 
@@ -102,8 +119,10 @@ Methods are member functions of a class that define the object's behavior.
 ### Syntax
 
 ```ebnf
-method_declaration ::= ["pub" | "priv"] ["static"] "fn" identifier "(" parameter_list? ")" ["->" type] block
+method_declaration ::= ["priv"] ["static"] "fn" identifier "(" parameter_list? ")" ["->" type] block
 ```
+
+**Note**: The `pub` modifier is redundant and should be omitted (methods are public by default).
 
 ### Features
 
@@ -141,8 +160,11 @@ Constructors are special methods used to initialize newly created objects.
 ### Syntax
 
 ```ebnf
-constructor_declaration ::= ["pub" | "priv"] "constructor" "(" parameter_list? ")" block
+constructor_declaration ::= ["priv"] "constructor" "(" parameter_list? ")" block
+primary_constructor ::= "class" identifier "(" [["priv"] ("let" | "var") identifier ":" type] ("," ["priv"] ("let" | "var") identifier ":" type)* ")" "{" class_member* "}"
 ```
+
+**Note**: The `pub` modifier is redundant for constructors (they are public by default).
 
 ### Features
 
@@ -195,6 +217,8 @@ fn main() -> int {
 
 ### Example: Primary Constructor (Kotlin/Swift Style)
 
+Primary constructors allow you to define fields directly in the class header, eliminating boilerplate code.
+
 ```aurora
 // Concise syntax: fields automatically created from constructor parameters
 class Point(let x: double, let y: double) {
@@ -204,12 +228,21 @@ class Point(let x: double, let y: double) {
 }
 
 // With visibility modifiers and mutable fields
-class Person(pub let name: string, priv var age: int) {
+// Note: 'pub' is unnecessary as members are public by default
+class Person(let name: string, priv var age: int) {
     fn birthday() {
-        this.age = this.age + 1
+        this.age = this.age + 1  # Can modify private field
     }
 }
 ```
+
+### Primary Constructor Features
+
+1. **Automatic Field Creation**: Parameters become class fields
+2. **Type Annotations**: Required for all parameters
+3. **Mutability**: Use `let` for immutable, `var` for mutable fields
+4. **Visibility**: Use `priv` for private fields (public by default)
+5. **Additional Constructors**: Can define additional constructors alongside primary constructor
 
 ---
 
@@ -317,30 +350,40 @@ AuroraLang supports access modifiers to control member visibility.
 
 ### Keywords
 
-- **`pub`**: Public member (default)
+- **`pub`**: Public member (unnecessary - members are public by default)
 - **`priv`**: Private member
+
+### Default Visibility
+
+**All class members (fields, methods, constructors) are public by default.** You only need to specify `priv` for private members. Using `pub` is unnecessary and redundant.
 
 ### Example
 
 ```aurora
 class BankAccount {
     priv let balance: double      # Private field
-    pub let accountNumber: int    # Public field
+    let accountNumber: int        # Public field (default)
     
-    pub constructor(accNum: int) {
+    constructor(accNum: int) {    # Public constructor (default)
         this.accountNumber = accNum
         this.balance = 0.0
     }
     
-    pub fn deposit(amount: double) {
+    fn deposit(amount: double) {  # Public method (default)
         this.balance = this.balance + amount
     }
     
     priv fn validateAmount(amount: double) -> bool {
-        return amount > 0.0
+        return amount > 0.0       # Private method
     }
 }
 ```
+
+### Best Practices
+
+1. **Omit `pub` modifier**: Since members are public by default, omit the `pub` keyword
+2. **Explicitly mark private members**: Always use `priv` for private members to make privacy intent clear
+3. **Use IDE hints**: Modern IDEs will warn about unnecessary `pub` modifiers
 
 ---
 
@@ -351,15 +394,8 @@ class BankAccount {
 ```aurora
 extern printd(x)
 
-class BankAccount {
-    let balance: double
-    let accountNumber: int
-    
-    constructor(accNum: int, initialBalance: double) {
-        this.accountNumber = accNum
-        this.balance = initialBalance
-    }
-    
+# Using primary constructor for cleaner code
+class BankAccount(let accountNumber: int, var balance: double) {
     fn deposit(amount: double) {
         this.balance = this.balance + amount
     }
@@ -392,19 +428,19 @@ class BankAccount {
 }
 
 fn main() -> int {
-    # 创建账户
+    # Create accounts using primary constructor
     let account1 = BankAccount(12345, 1000.0)
     let account2 = BankAccount(67890, 500.0)
     
-    # 存款
+    # Deposit
     account1.deposit(200.0)
     printd(account1.getBalance())  # 1200.0
     
-    # 取款
+    # Withdraw
     account1.withdraw(300.0)
     printd(account1.getBalance())  # 900.0
     
-    # 转账
+    # Transfer
     account1.transfer(account2, 100.0)
     printd(account1.getBalance())  # 800.0
     printd(account2.getBalance())  # 600.0
@@ -418,15 +454,10 @@ fn main() -> int {
 ```aurora
 extern printd(x)
 
-class Circle {
-    let radius: double
-    
-    constructor(r: double) {
-        this.radius = r
-    }
-    
+# Using primary constructor with mutable field
+class Circle(var radius: double) {
     fn area() -> double {
-        # π * r^2 (使用 3.14159 作为 π)
+        # π * r^2 (using 3.14159 as π)
         return 3.14159 * this.radius * this.radius
     }
     

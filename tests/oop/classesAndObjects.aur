@@ -4,16 +4,8 @@
 // Tests classes, objects, constructors, methods, and member access
 // ==============================================================================
 
-// Basic class with fields and methods
-class Point {
-    let x: double
-    let y: double
-    
-    constructor(x_val: double, y_val: double) {
-        this.x = x_val
-        this.y = y_val
-    }
-    
+// Basic class with primary constructor (modern syntax)
+class Point(var x: double, var y: double) {
     fn getX() -> double {
         return this.x
     }
@@ -35,16 +27,8 @@ class Point {
     }
 }
 
-// Class with multiple constructors (overloading)
-class Rectangle {
-    let width: double
-    let height: double
-    
-    constructor(w: double, h: double) {
-        this.width = w
-        this.height = h
-    }
-    
+// Class with primary constructor and additional constructor for overloading
+class Rectangle(let width: double, let height: double) {
     constructor(size: double) {
         this.width = size
         this.height = size
@@ -59,14 +43,8 @@ class Rectangle {
     }
 }
 
-// Class with mutable fields
-class Counter {
-    var value: int
-    
-    constructor(initial: int) {
-        this.value = initial
-    }
-    
+// Class with mutable field using primary constructor
+class Counter(var value: int) {
     fn increment() {
         this.value = this.value + 1
     }
@@ -84,21 +62,14 @@ class Counter {
     }
 }
 
-// Class with access modifiers
-class BankAccount {
-    priv let balance: double
-    pub let accountNumber: int
-    
-    constructor(accNum: int, initialBalance: double) {
-        this.accountNumber = accNum
-        this.balance = initialBalance
-    }
-    
-    pub fn deposit(amount: double) {
+// Class with access modifiers using primary constructor
+// Note: Members are public by default, use 'priv' for private members
+class BankAccount(let accountNumber: int, priv var balance: double) {
+    fn deposit(amount: double) {
         this.balance = this.balance + amount
     }
     
-    pub fn withdraw(amount: double) -> bool {
+    fn withdraw(amount: double) -> bool {
         if this.balance >= amount {
             this.balance = this.balance - amount
             return true
@@ -107,19 +78,13 @@ class BankAccount {
         }
     }
     
-    pub fn getBalance() -> double {
+    fn getBalance() -> double {
         return this.balance
     }
 }
 
 // Primary constructor syntax (Kotlin/Swift style)
-class Circle {
-    let radius: double
-    
-    constructor(r: double) {
-        this.radius = r
-    }
-    
+class Circle(let radius: double) {
     fn area() -> double {
         return 3.14159 * this.radius * this.radius
     }

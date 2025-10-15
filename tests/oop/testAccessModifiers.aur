@@ -1,20 +1,13 @@
 // Test Access Modifiers
-// Verifies that pub/priv access control is enforced
+// Verifies that priv access control is enforced
+// Note: Class members are public by default, no need for 'pub' keyword
 
-class TestAccount {
-    priv let balance: double
-    pub let accountNumber: int
-    
-    constructor(accNum: int, initialBalance: double) {
-        this.accountNumber = accNum
-        this.balance = initialBalance
-    }
-    
-    pub fn getBalance() -> double {
+class TestAccount(let accountNumber: int, priv var balance: double) {
+    fn getBalance() -> double {
         return this.balance
     }
     
-    pub fn deposit(amount: double) {
+    fn deposit(amount: double) {
         this.balance = this.balance + amount
     }
 }

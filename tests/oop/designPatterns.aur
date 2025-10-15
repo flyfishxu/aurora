@@ -5,17 +5,7 @@
 // ==============================================================================
 
 // Singleton Pattern (conceptual - using single shared instance)
-class ConfigManager {
-    let appId: int
-    let maxConnections: int
-    let isDebugMode: bool
-    
-    constructor(id: int, connections: int, debug: bool) {
-        this.appId = id
-        this.maxConnections = connections
-        this.isDebugMode = debug
-    }
-    
+class ConfigManager(let appId: int, var maxConnections: int, let isDebugMode: bool) {
     fn getAppId() -> int {
         return this.appId
     }
@@ -40,17 +30,7 @@ class ConfigManager {
 }
 
 // Simple Person class
-class Person {
-    let id: int
-    let age: int
-    let isActive: bool
-    
-    constructor(id: int, age: int, active: bool) {
-        this.id = id
-        this.age = age
-        this.isActive = active
-    }
-    
+class Person(let id: int, let age: int, let isActive: bool) {
     fn getId() -> int {
         return this.id
     }
@@ -71,28 +51,14 @@ class Person {
 }
 
 // Circle class for factory pattern
-class Circle {
-    let radius: double
-    
-    constructor(r: double) {
-        this.radius = r
-    }
-    
+class Circle(let radius: double) {
     fn area() -> double {
         return 3.14159 * this.radius * this.radius
     }
 }
 
 // Rectangle class for factory pattern
-class Rectangle {
-    let width: double
-    let height: double
-    
-    constructor(w: double, h: double) {
-        this.width = w
-        this.height = h
-    }
-    
+class Rectangle(let width: double, let height: double) {
     fn area() -> double {
         return this.width * this.height
     }
@@ -114,13 +80,7 @@ class ShapeFactory {
 }
 
 // Logger class for singleton test
-class Logger {
-    let prefix: double
-    
-    constructor() {
-        this.prefix = 999.0
-    }
-    
+class Logger(let prefix: double) {
     fn log(value: double) {
         printd(this.prefix)
         printd(value)
@@ -168,7 +128,7 @@ fn testObjectSingleton() {
     printd(5003)  // Test marker
     
     // Test singleton-like behavior with simple class
-    let logger = Logger()
+    let logger = Logger(999.0)
     logger.log(1.0)
     logger.log(2.0)
     logger.log(3.0)
