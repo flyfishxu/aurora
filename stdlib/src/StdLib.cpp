@@ -16,47 +16,47 @@ namespace aurorax {
 // ============================================================================
 
 extern "C" {
-    int64_t auroraStdPrintInt(int64_t value) {
+    int64_t aurora_print_int(int64_t value) {
         std::cout << value;
         std::cout.flush();
         return value;
     }
     
-    double auroraStdPrintDouble(double value) {
+    double aurora_print_double(double value) {
         std::cout << value;
         std::cout.flush();
         return value;
     }
     
-    int auroraStdPrintBool(int value) {
+    int aurora_print_bool(int value) {
         std::cout << (value ? "true" : "false");
         std::cout.flush();
         return value;
     }
     
-    void auroraStdPrintString(const char* str) {
+    void aurora_print_string(const char* str) {
         if (str) {
             std::cout << str;
             std::cout.flush();
         }
     }
     
-    int64_t auroraStdPrintlnInt(int64_t value) {
+    int64_t aurora_println_int(int64_t value) {
         std::cout << value << std::endl;
         return value;
     }
     
-    double auroraStdPrintlnDouble(double value) {
+    double aurora_println_double(double value) {
         std::cout << value << std::endl;
         return value;
     }
     
-    int auroraStdPrintlnBool(int value) {
+    int aurora_println_bool(int value) {
         std::cout << (value ? "true" : "false") << std::endl;
         return value;
     }
     
-    void auroraStdPrintlnString(const char* str) {
+    void aurora_println_string(const char* str) {
         if (str) {
             std::cout << str << std::endl;
         }
@@ -68,11 +68,11 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    int64_t auroraStdStringLength(const char* str) {
+    int64_t aurora_string_length(const char* str) {
         return str ? static_cast<int64_t>(strlen(str)) : 0;
     }
     
-    char* auroraStdStringConcat(const char* a, const char* b) {
+    char* aurora_string_concat(const char* a, const char* b) {
         if (!a || !b) return nullptr;
         
         size_t len_a = strlen(a);
@@ -85,17 +85,17 @@ extern "C" {
         return result;
     }
     
-    int auroraStdStringCompare(const char* a, const char* b) {
+    int aurora_string_compare(const char* a, const char* b) {
         if (!a || !b) return 0;
         return strcmp(a, b);
     }
     
-    int auroraStdStringEquals(const char* a, const char* b) {
+    int aurora_string_equals(const char* a, const char* b) {
         if (!a || !b) return 0;
         return strcmp(a, b) == 0 ? 1 : 0;
     }
     
-    char* auroraStdStringSubstring(const char* str, int64_t start, int64_t end) {
+    char* aurora_string_substring(const char* str, int64_t start, int64_t end) {
         if (!str) return nullptr;
         
         int64_t len = static_cast<int64_t>(strlen(str));
@@ -109,31 +109,31 @@ extern "C" {
         return result;
     }
     
-    int64_t auroraStdStringToInt(const char* str) {
+    int64_t aurora_string_to_int(const char* str) {
         if (!str) return 0;
         return static_cast<int64_t>(std::stoll(str));
     }
     
-    double auroraStdStringToDouble(const char* str) {
+    double aurora_string_to_double(const char* str) {
         if (!str) return 0.0;
         return std::stod(str);
     }
     
-    char* auroraStdIntToString(int64_t value) {
+    char* aurora_int_to_string(int64_t value) {
         std::string str = std::to_string(value);
         char* result = new char[str.length() + 1];
         strcpy(result, str.c_str());
         return result;
     }
     
-    char* auroraStdDoubleToString(double value) {
+    char* aurora_double_to_string(double value) {
         std::string str = std::to_string(value);
         char* result = new char[str.length() + 1];
         strcpy(result, str.c_str());
         return result;
     }
     
-    void auroraStdStringFree(char* str) {
+    void aurora_string_free(char* str) {
         delete[] str;
     }
 }
@@ -143,28 +143,28 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    double auroraStdSin(double x) { return std::sin(x); }
-    double auroraStdCos(double x) { return std::cos(x); }
-    double auroraStdTan(double x) { return std::tan(x); }
+    double aurora_sin(double x) { return std::sin(x); }
+    double aurora_cos(double x) { return std::cos(x); }
+    double aurora_tan(double x) { return std::tan(x); }
     
-    double auroraStdAsin(double x) { return std::asin(x); }
-    double auroraStdAcos(double x) { return std::acos(x); }
-    double auroraStdAtan(double x) { return std::atan(x); }
-    double auroraStdAtan2(double y, double x) { return std::atan2(y, x); }
+    double aurora_asin(double x) { return std::asin(x); }
+    double aurora_acos(double x) { return std::acos(x); }
+    double aurora_atan(double x) { return std::atan(x); }
+    double aurora_atan2(double y, double x) { return std::atan2(y, x); }
     
-    double auroraStdExp(double x) { return std::exp(x); }
-    double auroraStdLog(double x) { return std::log(x); }
-    double auroraStdLog10(double x) { return std::log10(x); }
-    double auroraStdPow(double base, double exp) { return std::pow(base, exp); }
-    double auroraStdSqrt(double x) { return std::sqrt(x); }
+    double aurora_exp(double x) { return std::exp(x); }
+    double aurora_log(double x) { return std::log(x); }
+    double aurora_log10(double x) { return std::log10(x); }
+    double aurora_pow(double base, double exp) { return std::pow(base, exp); }
+    double aurora_sqrt(double x) { return std::sqrt(x); }
     
-    double auroraStdFloor(double x) { return std::floor(x); }
-    double auroraStdCeil(double x) { return std::ceil(x); }
-    double auroraStdRound(double x) { return std::round(x); }
+    double aurora_floor(double x) { return std::floor(x); }
+    double aurora_ceil(double x) { return std::ceil(x); }
+    double aurora_round(double x) { return std::round(x); }
     
     static bool random_seeded = false;
     
-    int64_t auroraStdRandomInt(int64_t min, int64_t max) {
+    int64_t aurora_random_int(int64_t min, int64_t max) {
         if (!random_seeded) {
             std::srand(static_cast<unsigned int>(std::time(nullptr)));
             random_seeded = true;
@@ -173,7 +173,7 @@ extern "C" {
         return min + (std::rand() % (max - min));
     }
     
-    double auroraStdRandomDouble() {
+    double aurora_random_double() {
         if (!random_seeded) {
             std::srand(static_cast<unsigned int>(std::time(nullptr)));
             random_seeded = true;
@@ -181,7 +181,7 @@ extern "C" {
         return static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
     }
     
-    void auroraStdRandomSeed(int64_t seed) {
+    void aurora_random_seed(int64_t seed) {
         std::srand(static_cast<unsigned int>(seed));
         random_seeded = true;
     }
@@ -192,17 +192,17 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    int64_t auroraStdTimeNow() {
+    int64_t aurora_time_now() {
         return static_cast<int64_t>(std::time(nullptr));
     }
     
-    int64_t auroraStdTimeNowMillis() {
+    int64_t aurora_time_now_millis() {
         auto now = std::chrono::system_clock::now();
         auto duration = now.time_since_epoch();
         return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     }
     
-    void auroraStdSleepMillis(int64_t millis) {
+    void aurora_sleep_millis(int64_t millis) {
         std::this_thread::sleep_for(std::chrono::milliseconds(millis));
     }
 }
@@ -212,7 +212,7 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    char* auroraStdFileReadAll(const char* path) {
+    char* aurora_file_read(const char* path) {
         if (!path) return nullptr;
         
         std::ifstream file(path);
@@ -228,7 +228,7 @@ extern "C" {
         return result;
     }
     
-    int auroraStdFileWrite(const char* path, const char* content) {
+    int aurora_file_write(const char* path, const char* content) {
         if (!path || !content) return -1;
         
         std::ofstream file(path);
@@ -238,7 +238,7 @@ extern "C" {
         return 0;
     }
     
-    int auroraStdFileAppend(const char* path, const char* content) {
+    int aurora_file_append(const char* path, const char* content) {
         if (!path || !content) return -1;
         
         std::ofstream file(path, std::ios::app);
@@ -248,13 +248,13 @@ extern "C" {
         return 0;
     }
     
-    int auroraStdFileExists(const char* path) {
+    int aurora_file_exists(const char* path) {
         if (!path) return 0;
         std::ifstream file(path);
         return file.good() ? 1 : 0;
     }
     
-    int auroraStdFileDelete(const char* path) {
+    int aurora_file_delete(const char* path) {
         if (!path) return -1;
         return std::remove(path);
     }
@@ -265,11 +265,11 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    void auroraStdExit(int code) {
+    void aurora_exit(int code) {
         std::exit(code);
     }
     
-    char* auroraStdGetEnv(const char* name) {
+    char* aurora_get_env(const char* name) {
         if (!name) return nullptr;
         const char* value = std::getenv(name);
         if (!value) return nullptr;
@@ -283,11 +283,11 @@ extern "C" {
     static int64_t g_argc = 0;
     static char** g_argv = nullptr;
     
-    int64_t auroraStdGetArgCount() {
+    int64_t aurora_arg_count() {
         return g_argc;
     }
     
-    char* auroraStdGetArg(int64_t index) {
+    char* aurora_arg_get(int64_t index) {
         if (index < 0 || index >= g_argc || !g_argv) return nullptr;
         
         const char* arg = g_argv[index];

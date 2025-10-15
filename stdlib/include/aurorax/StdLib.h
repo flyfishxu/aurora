@@ -1,11 +1,10 @@
 #pragma once
 
-// AuroraLang Standard Library C++ Interface
-// This header provides the C++ interface for standard library functions
-// that are implemented in C++ for performance or system integration
+// AuroraLang Standard Library - Native Interface
+// Clean, minimal C API for performance-critical operations
+// Design inspired by Kotlin and Swift standard libraries
 
 #include <cstdint>
-#include <string>
 
 namespace aurorax {
 
@@ -13,25 +12,18 @@ namespace aurorax {
 // Core I/O Functions
 // ============================================================================
 
-// Print functions for different types
 extern "C" {
-    // Print integer to stdout
-    int64_t auroraStdPrintInt(int64_t value);
+    // Print functions (return value for chaining)
+    int64_t aurora_print_int(int64_t value);
+    double aurora_print_double(double value);
+    int aurora_print_bool(int value);
+    void aurora_print_string(const char* str);
     
-    // Print double to stdout
-    double auroraStdPrintDouble(double value);
-    
-    // Print boolean to stdout
-    int auroraStdPrintBool(int value);
-    
-    // Print string to stdout
-    void auroraStdPrintString(const char* str);
-    
-    // Print with newline variants
-    int64_t auroraStdPrintlnInt(int64_t value);
-    double auroraStdPrintlnDouble(double value);
-    int auroraStdPrintlnBool(int value);
-    void auroraStdPrintlnString(const char* str);
+    // Print with newline
+    int64_t aurora_println_int(int64_t value);
+    double aurora_println_double(double value);
+    int aurora_println_bool(int value);
+    void aurora_println_string(const char* str);
 }
 
 // ============================================================================
@@ -39,69 +31,51 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    // String length
-    int64_t auroraStdStringLength(const char* str);
+    int64_t aurora_string_length(const char* str);
+    char* aurora_string_concat(const char* a, const char* b);
+    int aurora_string_compare(const char* a, const char* b);
+    int aurora_string_equals(const char* a, const char* b);
+    char* aurora_string_substring(const char* str, int64_t start, int64_t end);
     
-    // String concatenation (returns new string)
-    char* auroraStdStringConcat(const char* a, const char* b);
+    // Conversions
+    int64_t aurora_string_to_int(const char* str);
+    double aurora_string_to_double(const char* str);
+    char* aurora_int_to_string(int64_t value);
+    char* aurora_double_to_string(double value);
     
-    // String comparison
-    int auroraStdStringCompare(const char* a, const char* b);
-    
-    // String equality
-    int auroraStdStringEquals(const char* a, const char* b);
-    
-    // Substring (from start to end, exclusive)
-    char* auroraStdStringSubstring(const char* str, int64_t start, int64_t end);
-    
-    // String to integer conversion
-    int64_t auroraStdStringToInt(const char* str);
-    
-    // String to double conversion
-    double auroraStdStringToDouble(const char* str);
-    
-    // Integer to string conversion
-    char* auroraStdIntToString(int64_t value);
-    
-    // Double to string conversion
-    char* auroraStdDoubleToString(double value);
-    
-    // Free string memory
-    void auroraStdStringFree(char* str);
+    void aurora_string_free(char* str);
 }
 
 // ============================================================================
-// Math Functions (advanced)
+// Math Functions
 // ============================================================================
 
 extern "C" {
-    // Trigonometric functions
-    double auroraStdSin(double x);
-    double auroraStdCos(double x);
-    double auroraStdTan(double x);
+    // Trigonometric
+    double aurora_sin(double x);
+    double aurora_cos(double x);
+    double aurora_tan(double x);
+    double aurora_asin(double x);
+    double aurora_acos(double x);
+    double aurora_atan(double x);
+    double aurora_atan2(double y, double x);
     
-    // Inverse trigonometric functions
-    double auroraStdAsin(double x);
-    double auroraStdAcos(double x);
-    double auroraStdAtan(double x);
-    double auroraStdAtan2(double y, double x);
+    // Exponential and logarithmic
+    double aurora_exp(double x);
+    double aurora_log(double x);
+    double aurora_log10(double x);
+    double aurora_pow(double base, double exponent);
+    double aurora_sqrt(double x);
     
-    // Exponential and logarithmic functions
-    double auroraStdExp(double x);
-    double auroraStdLog(double x);
-    double auroraStdLog10(double x);
-    double auroraStdPow(double base, double exponent);
-    double auroraStdSqrt(double x);
+    // Rounding
+    double aurora_floor(double x);
+    double aurora_ceil(double x);
+    double aurora_round(double x);
     
-    // Rounding functions
-    double auroraStdFloor(double x);
-    double auroraStdCeil(double x);
-    double auroraStdRound(double x);
-    
-    // Random number generation
-    int64_t auroraStdRandomInt(int64_t min, int64_t max);
-    double auroraStdRandomDouble();
-    void auroraStdRandomSeed(int64_t seed);
+    // Random
+    int64_t aurora_random_int(int64_t min, int64_t max);
+    double aurora_random_double();
+    void aurora_random_seed(int64_t seed);
 }
 
 // ============================================================================
@@ -109,35 +83,21 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    // Get current timestamp in seconds since epoch
-    int64_t auroraStdTimeNow();
-    
-    // Get current timestamp in milliseconds
-    int64_t auroraStdTimeNowMillis();
-    
-    // Sleep for specified milliseconds
-    void auroraStdSleepMillis(int64_t millis);
+    int64_t aurora_time_now();
+    int64_t aurora_time_now_millis();
+    void aurora_sleep_millis(int64_t millis);
 }
 
 // ============================================================================
-// File I/O Functions
+// File I/O
 // ============================================================================
 
 extern "C" {
-    // Read entire file as string
-    char* auroraStdFileReadAll(const char* path);
-    
-    // Write string to file
-    int auroraStdFileWrite(const char* path, const char* content);
-    
-    // Append string to file
-    int auroraStdFileAppend(const char* path, const char* content);
-    
-    // Check if file exists
-    int auroraStdFileExists(const char* path);
-    
-    // Delete file
-    int auroraStdFileDelete(const char* path);
+    char* aurora_file_read(const char* path);
+    int aurora_file_write(const char* path, const char* content);
+    int aurora_file_append(const char* path, const char* content);
+    int aurora_file_exists(const char* path);
+    int aurora_file_delete(const char* path);
 }
 
 // ============================================================================
@@ -145,17 +105,10 @@ extern "C" {
 // ============================================================================
 
 extern "C" {
-    // Exit program with code
-    void auroraStdExit(int code);
-    
-    // Get environment variable
-    char* auroraStdGetEnv(const char* name);
-    
-    // Get command line arguments count
-    int64_t auroraStdGetArgCount();
-    
-    // Get command line argument at index
-    char* auroraStdGetArg(int64_t index);
+    void aurora_exit(int code);
+    char* aurora_get_env(const char* name);
+    int64_t aurora_arg_count();
+    char* aurora_arg_get(int64_t index);
 }
 
 } // namespace aurorax

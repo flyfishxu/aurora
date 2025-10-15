@@ -1,0 +1,231 @@
+// AuroraLang Standard Library - Math: Basic Operations
+// Clean, overloaded functions inspired by Kotlin/Swift
+
+// ============================================================================
+// Absolute Value (Overloaded)
+// ============================================================================
+
+fn abs(x: int) -> int {
+    return x < 0 ? -x : x
+}
+
+fn abs(x: double) -> double {
+    return x < 0.0 ? -x : x
+}
+
+// ============================================================================
+// Min/Max (Overloaded)
+// ============================================================================
+
+fn min(a: int, b: int) -> int {
+    return a < b ? a : b
+}
+
+fn min(a: double, b: double) -> double {
+    return a < b ? a : b
+}
+
+fn max(a: int, b: int) -> int {
+    return a > b ? a : b
+}
+
+fn max(a: double, b: double) -> double {
+    return a > b ? a : b
+}
+
+// ============================================================================
+// Clamp - Constrain value between min and max
+// ============================================================================
+
+fn clamp(value: int, minVal: int, maxVal: int) -> int {
+    return value < minVal ? minVal : (value > maxVal ? maxVal : value)
+}
+
+fn clamp(value: double, minVal: double, maxVal: double) -> double {
+    return value < minVal ? minVal : (value > maxVal ? maxVal : value)
+}
+
+// ============================================================================
+// Sign Function (-1, 0, or 1)
+// ============================================================================
+
+fn sign(x: int) -> int {
+    return x < 0 ? -1 : (x > 0 ? 1 : 0)
+}
+
+fn sign(x: double) -> int {
+    return x < 0.0 ? -1 : (x > 0.0 ? 1 : 0)
+}
+
+// ============================================================================
+// Power Function (Integer Exponentiation)
+// ============================================================================
+
+fn pow(base: int, exponent: int) -> int {
+    if exponent == 0 {
+        return 1
+    }
+    if exponent == 1 {
+        return base
+    }
+    
+    var result = 1
+    var exp = exponent
+    var b = base
+    
+    loop {
+        if exp <= 0 {
+            break
+        }
+        
+        if exp % 2 == 1 {
+            result = result * b
+        }
+        b = b * b
+        exp = exp / 2
+    }
+    
+    return result
+}
+
+// ============================================================================
+// Factorial
+// ============================================================================
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+// ============================================================================
+// Fibonacci
+// ============================================================================
+
+fn fibonacci(n: int) -> int {
+    if n <= 1 {
+        return n
+    }
+    
+    var a = 0
+    var b = 1
+    var i = 2
+    
+    loop {
+        if i > n {
+            break
+        }
+        
+        let temp = a + b
+        a = b
+        b = temp
+        i = i + 1
+    }
+    
+    return b
+}
+
+// ============================================================================
+// GCD - Greatest Common Divisor (Euclidean Algorithm)
+// ============================================================================
+
+fn gcd(a: int, b: int) -> int {
+    var x = abs(a)
+    var y = abs(b)
+    
+    loop {
+        if y == 0 {
+            break
+        }
+        
+        let temp = y
+        y = x % y
+        x = temp
+    }
+    
+    return x
+}
+
+// ============================================================================
+// LCM - Least Common Multiple
+// ============================================================================
+
+fn lcm(a: int, b: int) -> int {
+    if a == 0 || b == 0 {
+        return 0
+    }
+    
+    let absA = abs(a)
+    let absB = abs(b)
+    return (absA * absB) / gcd(absA, absB)
+}
+
+// ============================================================================
+// Prime Number Check
+// ============================================================================
+
+fn isPrime(n: int) -> bool {
+    if n <= 1 {
+        return false
+    }
+    if n <= 3 {
+        return true
+    }
+    
+    if n % 2 == 0 || n % 3 == 0 {
+        return false
+    }
+    
+    var i = 5
+    
+    loop {
+        if i * i > n {
+            break
+        }
+        
+        if n % i == 0 || n % (i + 2) == 0 {
+            return false
+        }
+        
+        i = i + 6
+    }
+    
+    return true
+}
+
+// ============================================================================
+// Square Root (Newton's Method Approximation)
+// ============================================================================
+
+fn sqrt(x: double) -> double {
+    if x < 0.0 {
+        return 0.0
+    }
+    if x == 0.0 {
+        return 0.0
+    }
+    
+    var guess = x / 2.0
+    let epsilon = 0.00001
+    var iterations = 0
+    
+    loop {
+        if iterations >= 100 {
+            break
+        }
+        
+        let nextGuess = (guess + x / guess) / 2.0
+        let diff = abs(guess - nextGuess)
+        
+        if diff < epsilon {
+            return nextGuess
+        }
+        
+        guess = nextGuess
+        iterations = iterations + 1
+    }
+    
+    return guess
+}
+

@@ -53,7 +53,7 @@ AuroraLang aims to be the world's best programming language, combining:
 | 🔧 **Compiler** | ~35% | ✅ Lexer, Parser, AST, Type System, OOP basics<br>❌ Generics, Traits, Advanced types |
 | ⚙️ **LLVM** | ~40% | ✅ IR generation, JIT compilation, Memory allocation, ARC<br>❌ Optimization pipeline, Vtables |
 | 🏗️ **Runtime** | ~70% | ✅ Array ops, Object ops, String ops, ARC (Automatic Reference Counting)<br>❌ Advanced memory management |
-| 📚 **Stdlib** | ~30% | ✅ Auto-import prelude, Math utils, Array utils, Bitwise ops, Range/Conversion<br>❌ String methods, Collections (generics required), Advanced features |
+| 📚 **Stdlib** | ~40% | ✅ Clean API design (Kotlin-inspired), Function overloading, Auto-import prelude<br>✅ Math utils, Array utils (sumOf, minOf), Conversion<br>❌ String methods, Collections (generics required) |
 | 🛠️ **Tooling** | ~10% | ✅ CLI, VSCode syntax highlighting<br>❌ LSP, Package manager, Debugger |
 
 ---
@@ -272,8 +272,9 @@ AuroraLang aims to be the world's best programming language, combining:
 1. ✅ ~~Complete stdlib integration~~ (v0.6.1)
 2. ✅ ~~Auto-import prelude~~ (v0.6.1)
 3. ✅ ~~Comprehensive stdlib utilities~~ (v0.6.1)
-4. [ ] String operations (in progress)
-5. [ ] Array properties (planned)
+4. ✅ ~~Clean stdlib API design~~ (v0.6.2) - Kotlin-inspired naming
+5. [ ] String operations (in progress)
+6. [ ] Array properties (planned - needs compiler support)
 
 ### Medium-Term (3-12 months)
 5. ✅ ~~Memory management implementation~~ (ARC completed)

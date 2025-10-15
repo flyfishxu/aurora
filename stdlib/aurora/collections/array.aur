@@ -1,0 +1,400 @@
+// AuroraLang Standard Library - Collections: Array Utilities
+// Clean, Kotlin-inspired array operations
+// Note: Using "Of" suffix to avoid conflicts with scalar min/max functions
+
+// Note: Length parameter required until array.size property is implemented
+// Future: arr.size(), arr.sumOf(), arr.map { it * 2 }
+
+// ============================================================================
+// Sum - Calculate total of all elements (Kotlin style: sumOf)
+// ============================================================================
+
+fn sumOf(arr: [int], length: int) -> int {
+    var total = 0
+    var i = 0
+    
+    while i < length {
+        total = total + arr[i]
+        i = i + 1
+    }
+    
+    return total
+}
+
+fn sumOf(arr: [double], length: int) -> double {
+    var total = 0.0
+    var i = 0
+    
+    while i < length {
+        total = total + arr[i]
+        i = i + 1
+    }
+    
+    return total
+}
+
+// ============================================================================
+// Average - Calculate mean value (Kotlin style: averageOf)
+// ============================================================================
+
+fn averageOf(arr: [int], length: int) -> double {
+    if length == 0 {
+        return 0.0
+    }
+    
+    // Manually sum as double to avoid type conversion issues
+    var total = 0.0
+    var i = 0
+    
+    while i < length {
+        total = total + (arr[i] + 0.0)  // Convert each element to double
+        i = i + 1
+    }
+    
+    let len = length + 0.0
+    return total / len
+}
+
+fn averageOf(arr: [double], length: int) -> double {
+    if length == 0 {
+        return 0.0
+    }
+    
+    let total = sumOf(arr, length)
+    return total / length
+}
+
+// ============================================================================
+// Min/Max - Find minimum/maximum values (Kotlin style: minOf, maxOf)
+// ============================================================================
+
+fn minOf(arr: [int], length: int) -> int {
+    if length == 0 {
+        return 0
+    }
+    
+    var minVal = arr[0]
+    var i = 1
+    
+    while i < length {
+        if arr[i] < minVal {
+            minVal = arr[i]
+        }
+        i = i + 1
+    }
+    
+    return minVal
+}
+
+fn minOf(arr: [double], length: int) -> double {
+    if length == 0 {
+        return 0.0
+    }
+    
+    var minVal = arr[0]
+    var i = 1
+    
+    while i < length {
+        if arr[i] < minVal {
+            minVal = arr[i]
+        }
+        i = i + 1
+    }
+    
+    return minVal
+}
+
+fn maxOf(arr: [int], length: int) -> int {
+    if length == 0 {
+        return 0
+    }
+    
+    var maxVal = arr[0]
+    var i = 1
+    
+    while i < length {
+        if arr[i] > maxVal {
+            maxVal = arr[i]
+        }
+        i = i + 1
+    }
+    
+    return maxVal
+}
+
+fn maxOf(arr: [double], length: int) -> double {
+    if length == 0 {
+        return 0.0
+    }
+    
+    var maxVal = arr[0]
+    var i = 1
+    
+    while i < length {
+        if arr[i] > maxVal {
+            maxVal = arr[i]
+        }
+        i = i + 1
+    }
+    
+    return maxVal
+}
+
+// ============================================================================
+// Reverse - Reverse array in-place
+// ============================================================================
+
+fn reverse(arr: [int], length: int) -> void {
+    var left = 0
+    var right = length - 1
+    
+    while left < right {
+        let temp = arr[left]
+        arr[left] = arr[right]
+        arr[right] = temp
+        
+        left = left + 1
+        right = right - 1
+    }
+}
+
+fn reverse(arr: [double], length: int) -> void {
+    var left = 0
+    var right = length - 1
+    
+    while left < right {
+        let temp = arr[left]
+        arr[left] = arr[right]
+        arr[right] = temp
+        
+        left = left + 1
+        right = right - 1
+    }
+}
+
+// ============================================================================
+// Contains - Check if array contains a value
+// ============================================================================
+
+fn contains(arr: [int], length: int, value: int) -> bool {
+    var i = 0
+    
+    while i < length {
+        if arr[i] == value {
+            return true
+        }
+        i = i + 1
+    }
+    
+    return false
+}
+
+fn contains(arr: [double], length: int, value: double, epsilon: double) -> bool {
+    var i = 0
+    
+    while i < length {
+        let diff = arr[i] - value
+        let absDiff = diff < 0.0 ? -diff : diff
+        
+        if absDiff < epsilon {
+            return true
+        }
+        i = i + 1
+    }
+    
+    return false
+}
+
+// ============================================================================
+// IndexOf - Find first occurrence of value
+// ============================================================================
+
+fn indexOf(arr: [int], length: int, value: int) -> int {
+    var i = 0
+    
+    while i < length {
+        if arr[i] == value {
+            return i
+        }
+        i = i + 1
+    }
+    
+    return -1
+}
+
+fn indexOf(arr: [double], length: int, value: double, epsilon: double) -> int {
+    var i = 0
+    
+    while i < length {
+        let diff = arr[i] - value
+        let absDiff = diff < 0.0 ? -diff : diff
+        
+        if absDiff < epsilon {
+            return i
+        }
+        i = i + 1
+    }
+    
+    return -1
+}
+
+// ============================================================================
+// Count - Count occurrences of value
+// ============================================================================
+
+fn count(arr: [int], length: int, value: int) -> int {
+    var counter = 0
+    var i = 0
+    
+    while i < length {
+        if arr[i] == value {
+            counter = counter + 1
+        }
+        i = i + 1
+    }
+    
+    return counter
+}
+
+// ============================================================================
+// IsSorted - Check if array is sorted
+// ============================================================================
+
+fn isSorted(arr: [int], length: int) -> bool {
+    var i = 0
+    
+    while i < length - 1 {
+        if arr[i] > arr[i + 1] {
+            return false
+        }
+        i = i + 1
+    }
+    
+    return true
+}
+
+fn isSorted(arr: [double], length: int) -> bool {
+    var i = 0
+    
+    while i < length - 1 {
+        if arr[i] > arr[i + 1] {
+            return false
+        }
+        i = i + 1
+    }
+    
+    return true
+}
+
+// ============================================================================
+// Sort - Bubble sort (for small arrays)
+// ============================================================================
+
+fn sort(arr: [int], length: int) -> void {
+    var i = 0
+    
+    while i < length - 1 {
+        var j = 0
+        
+        while j < length - i - 1 {
+            if arr[j] > arr[j + 1] {
+                let temp = arr[j]
+                arr[j] = arr[j + 1]
+                arr[j + 1] = temp
+            }
+            j = j + 1
+        }
+        
+        i = i + 1
+    }
+}
+
+fn sort(arr: [double], length: int) -> void {
+    var i = 0
+    
+    while i < length - 1 {
+        var j = 0
+        
+        while j < length - i - 1 {
+            if arr[j] > arr[j + 1] {
+                let temp = arr[j]
+                arr[j] = arr[j + 1]
+                arr[j + 1] = temp
+            }
+            j = j + 1
+        }
+        
+        i = i + 1
+    }
+}
+
+// ============================================================================
+// BinarySearch - Search in sorted array
+// ============================================================================
+
+fn binarySearch(arr: [int], length: int, target: int) -> int {
+    var left = 0
+    var right = length - 1
+    
+    while left <= right {
+        let mid = (left + right) / 2
+        let midVal = arr[mid]
+        
+        if midVal == target {
+            return mid
+        } else {
+            if midVal < target {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+    }
+    
+    return -1
+}
+
+// ============================================================================
+// Fill - Fill array with value
+// ============================================================================
+
+fn fill(arr: [int], length: int, value: int) -> void {
+    var i = 0
+    
+    while i < length {
+        arr[i] = value
+        i = i + 1
+    }
+}
+
+fn fill(arr: [double], length: int, value: double) -> void {
+    var i = 0
+    
+    while i < length {
+        arr[i] = value
+        i = i + 1
+    }
+}
+
+// ============================================================================
+// Copy - Copy array contents
+// ============================================================================
+
+fn copy(source: [int], dest: [int], length: int) -> void {
+    var i = 0
+    
+    while i < length {
+        dest[i] = source[i]
+        i = i + 1
+    }
+}
+
+fn copy(source: [double], dest: [double], length: int) -> void {
+    var i = 0
+    
+    while i < length {
+        dest[i] = source[i]
+        i = i + 1
+    }
+}
+

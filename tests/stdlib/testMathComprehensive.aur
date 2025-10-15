@@ -1,25 +1,26 @@
 // Comprehensive test for stdlib math functions
 // Note: stdlib is auto-imported, no need for manual import
+// Now using clean, overloaded function names
 
 fn main() -> int {
     printd(1000)  // Start marker
     
-    // Test abs functions
-    printd(absInt(5))
-    printd(absInt(-10))
-    printd(absDouble(3.5))
-    printd(absDouble(-7.2))
+    // Test abs functions (overloaded)
+    printd(abs(5))
+    printd(abs(-10))
+    printd(abs(3.5))
+    printd(abs(-7.2))
     
-    // Test min/max
-    printd(minInt(10, 20))
-    printd(maxInt(10, 20))
-    printd(minDouble(5.5, 3.3))
-    printd(maxDouble(5.5, 3.3))
+    // Test min/max (overloaded)
+    printd(min(10, 20))
+    printd(max(10, 20))
+    printd(min(5.5, 3.3))
+    printd(max(5.5, 3.3))
     
     // Test power
-    printd(powInt(2, 3))
-    printd(powInt(5, 0))
-    printd(powInt(3, 4))
+    printd(pow(2, 3))
+    printd(pow(5, 0))
+    printd(pow(3, 4))
     
     // Test factorial
     printd(factorial(5))
@@ -40,19 +41,19 @@ fn main() -> int {
     printd(isPrime(29))
     
     // Test sqrt
-    printd(sqrtApprox(4.0))
-    printd(sqrtApprox(9.0))
-    printd(sqrtApprox(25.0))
+    printd(sqrt(4.0))
+    printd(sqrt(9.0))
+    printd(sqrt(25.0))
     
-    // Test clamp
-    printd(clampInt(15, 10, 20))
-    printd(clampInt(5, 10, 20))
-    printd(clampDouble(15.5, 10.0, 20.0))
+    // Test clamp (overloaded)
+    printd(clamp(15, 10, 20))
+    printd(clamp(5, 10, 20))
+    printd(clamp(15.5, 10.0, 20.0))
     
-    // Test sign
-    printd(signInt(-42))
-    printd(signInt(0))
-    printd(signInt(42))
+    // Test sign (overloaded)
+    printd(sign(-42))
+    printd(sign(0))
+    printd(sign(42))
     
     printd(9999)  // End marker
     return 0

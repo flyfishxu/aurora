@@ -1,25 +1,83 @@
 // AuroraLang Standard Library - Core Prelude
-// This file is automatically imported into all Aurora programs
-// It provides fundamental functions and utilities
+// Automatically imported into all Aurora programs
+// Provides essential functions and utilities
+// Design inspired by Kotlin and Swift standard libraries
 
-// Core utilities
+// ============================================================================
+// Core Utilities
+// ============================================================================
+
 import "assert"
 import "range"
 import "conversion"
 
-// Math utilities
-import "../math/math"
+// ============================================================================
+// Math Utilities
+// ============================================================================
+
+import "../math/basic"
 import "../math/trigonometry"
 
-// Collection utilities
-import "../collections/array_utils"
-// import "../collections/bitwise"  // Temporarily disabled due to bitwise operator issues
+// ============================================================================
+// Collection Utilities
+// ============================================================================
 
-// Print functions are built-in and provided by the runtime
-// They are available without any import:
-// - printd(value: double) -> double
-// - printi(value: int) -> int  
-// - printb(value: bool) -> bool
-// - prints(value: string) -> void
+import "../collections/array"
 
+// Note: Bitwise operations temporarily disabled due to language limitations
+// Will be re-enabled when bitwise operators are fully supported
+// import "../collections/bitwise"
 
+// ============================================================================
+// Built-in Functions (Provided by Runtime)
+// ============================================================================
+
+// The following functions are automatically available without import:
+//
+// Print Functions:
+//   - printd(value: double) -> double
+//   - printi(value: int) -> int
+//   - printb(value: bool) -> bool
+//   - prints(value: string) -> void
+//
+// Advanced Math (Native C++ implementations):
+//   - sin, cos, tan, asin, acos, atan, atan2
+//   - exp, log, log10, pow, sqrt
+//   - floor, ceil, round
+//
+// Random Numbers:
+//   - randomInt(min, max), randomDouble(), randomSeed(seed)
+//
+// Time:
+//   - timeNow(), timeNowMillis(), sleepMillis(ms)
+//
+// File I/O:
+//   - fileRead(path), fileWrite(path, content)
+//   - fileAppend(path, content), fileExists(path), fileDelete(path)
+//
+// System:
+//   - exit(code), getEnv(name), argCount(), argGet(index)
+
+// ============================================================================
+// Design Philosophy
+// ============================================================================
+
+// 1. Clean, overloaded functions instead of type suffixes
+//    Good: abs(x)           Bad: absInt(x), absDouble(x)
+//    Good: sum(arr, len)    Bad: sumIntArray(arr, len)
+//
+// 2. Consistent parameter order
+//    Always: (primary_data, length, additional_params...)
+//
+// 3. Type-centric organization
+//    Math functions in math/ directory
+//    Array functions in collections/ directory
+//
+// 4. Minimal, essential prelude
+//    Only frequently-used functions are auto-imported
+//    Specialized modules require explicit import
+//
+// 5. Future-proof design
+//    Ready for extension methods: arr.size(), arr.sum()
+//    Ready for generics: List<T>, Map<K,V>
+//    Ready for traits: Comparable, Numeric, etc.

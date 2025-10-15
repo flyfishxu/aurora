@@ -1,67 +1,68 @@
 // Test stdlib array utility functions
 // Note: stdlib is auto-imported, no need for manual import
+// Now using clean, Kotlin-inspired function names (minOf, sumOf, etc.)
 
 fn main() -> int {
     // Create test array
     let arr = [5, 2, 8, 1, 9, 3]
     let len = 6
     
-    // Test min and max
-    printd(minIntArray(arr, len))    // 1
-    printd(maxIntArray(arr, len))    // 9
+    // Test minOf and maxOf (Kotlin style) - add 0.0 to convert to double for printd
+    printd(minOf(arr, len) + 0.0)    // 1
+    printd(maxOf(arr, len) + 0.0)    // 9
     
-    // Test sum and average
-    printd(sumIntArray(arr, len))    // 28
-    printd(averageIntArray(arr, len)) // 4.666...
+    // Test sumOf and averageOf (Kotlin style)
+    printd(sumOf(arr, len) + 0.0)    // 28
+    printd(averageOf(arr, len)) // 4.666...
     
-    // Test contains
-    printd(containsInt(arr, len, 8))  // 1 (true)
-    printd(containsInt(arr, len, 10)) // 0 (false)
+    // Test contains (overloaded)
+    printd(contains(arr, len, 8))  // 1 (true)
+    printd(contains(arr, len, 10)) // 0 (false)
     
-    // Test indexOf
-    printd(indexOfInt(arr, len, 8))  // 2
-    printd(indexOfInt(arr, len, 10)) // -1
+    // Test indexOf (overloaded)
+    printd(indexOf(arr, len, 8) + 0.0)  // 2
+    printd(indexOf(arr, len, 10) + 0.0) // -1
     
     // Test count
     let arr2 = [1, 2, 3, 2, 4, 2]
-    printd(countInt(arr2, 6, 2))      // 3
-    printd(countInt(arr2, 6, 5))      // 0
+    printd(count(arr2, 6, 2) + 0.0)      // 3
+    printd(count(arr2, 6, 5) + 0.0)      // 0
     
-    // Test isSorted
+    // Test isSorted (overloaded)
     let sortedArr = [1, 2, 3, 4, 5]
-    printd(isSortedInt(sortedArr, 5))  // 1 (true)
-    printd(isSortedInt(arr, len))       // 0 (false)
+    printd(isSorted(sortedArr, 5))  // 1 (true)
+    printd(isSorted(arr, len))       // 0 (false)
     
-    // Test bubbleSort
+    // Test sort (overloaded)
     let arr3 = [5, 2, 8, 1, 9]
-    bubbleSortInt(arr3, 5)
-    printd(arr3[0])  // 1
-    printd(arr3[1])  // 2
-    printd(arr3[2])  // 5
-    printd(arr3[3])  // 8
-    printd(arr3[4])  // 9
+    sort(arr3, 5)
+    printd(arr3[0] + 0.0)  // 1
+    printd(arr3[1] + 0.0)  // 2
+    printd(arr3[2] + 0.0)  // 5
+    printd(arr3[3] + 0.0)  // 8
+    printd(arr3[4] + 0.0)  // 9
     
-    // Test reverse
+    // Test reverse (overloaded)
     let arr4 = [1, 2, 3, 4, 5]
-    reverseIntArray(arr4, 5)
-    printd(arr4[0])  // 5
-    printd(arr4[1])  // 4
-    printd(arr4[2])  // 3
-    printd(arr4[3])  // 2
-    printd(arr4[4])  // 1
+    reverse(arr4, 5)
+    printd(arr4[0] + 0.0)  // 5
+    printd(arr4[1] + 0.0)  // 4
+    printd(arr4[2] + 0.0)  // 3
+    printd(arr4[3] + 0.0)  // 2
+    printd(arr4[4] + 0.0)  // 1
     
     // Test binary search (on sorted array)
     let sorted = [1, 3, 5, 7, 9, 11, 13]
-    printd(binarySearchInt(sorted, 7, 7))   // 3
-    printd(binarySearchInt(sorted, 7, 1))   // 0
-    printd(binarySearchInt(sorted, 7, 13))  // 6
-    printd(binarySearchInt(sorted, 7, 10))  // -1
+    printd(binarySearch(sorted, 7, 7) + 0.0)   // 3
+    printd(binarySearch(sorted, 7, 1) + 0.0)   // 0
+    printd(binarySearch(sorted, 7, 13) + 0.0)  // 6
+    printd(binarySearch(sorted, 7, 10) + 0.0)  // -1
     
-    // Test fill
+    // Test fill (overloaded)
     let arr5 = [0, 0, 0, 0, 0]
-    fillInt(arr5, 5, 42)
-    printd(arr5[0])  // 42
-    printd(arr5[4])  // 42
+    fill(arr5, 5, 42)
+    printd(arr5[0] + 0.0)  // 42
+    printd(arr5[4] + 0.0)  // 42
     
     return 0
 }
