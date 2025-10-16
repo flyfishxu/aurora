@@ -626,4 +626,9 @@ private:
     std::string modulePath;
 };
 
+/// Module system configuration
+void addModuleSearchPath(const std::string& path);
+void setStdlibPath(const std::string& path);
+void initializeModuleSystem();
+
 } // namespace aurora

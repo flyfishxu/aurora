@@ -49,6 +49,37 @@ add_subdirectory(stdlib)       # Standard library layer (C++)
 add_subdirectory(tools/aurora-cli)  # Aurora CLI tool
 add_subdirectory(tools/aurora-lsp)  # Aurora LSP Server
 
+# Create portable distribution directory
+set(DIST_DIR "${CMAKE_BINARY_DIR}/../dist")
+add_custom_target(dist
+    COMMAND ${CMAKE_COMMAND} -E echo "Creating portable distribution in ${DIST_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${DIST_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${DIST_DIR}/bin"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${DIST_DIR}/lib"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${DIST_DIR}/include"
+    
+    # Copy executable
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:aurora>" "${DIST_DIR}/bin/"
+    
+    # Copy libraries (static and shared)
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:aurora_runtime_static>" "${DIST_DIR}/lib/"
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:aurora_stdlib_static>" "${DIST_DIR}/lib/"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:aurora_runtime_shared>" "${DIST_DIR}/lib/" || true
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:aurora_stdlib_shared>" "${DIST_DIR}/lib/" || true
+    
+    # Copy stdlib sources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/stdlib/aurora" "${DIST_DIR}/stdlib/aurora"
+    
+    # Copy headers
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/runtime/include" "${DIST_DIR}/include"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/stdlib/include" "${DIST_DIR}/include"
+    
+    COMMAND ${CMAKE_COMMAND} -E echo "✓ Distribution created at: ${DIST_DIR}"
+    
+    DEPENDS aurora aurora_runtime_static aurora_stdlib_static
+    COMMENT "Creating portable AuroraLang distribution"
+)
+
 # Summary message
 message(STATUS "")
 message(STATUS "=== AuroraLang Build Configuration ===")
@@ -66,5 +97,6 @@ message(STATUS "  ✓ Aurora LSP Server")
 message(STATUS "")
 message(STATUS "Output:")
 message(STATUS "  Executable: ${CMAKE_BINARY_DIR}/aurora")
+message(STATUS "  Distribution: Run 'make dist' to create portable package")
 message(STATUS "")
 

@@ -23,7 +23,7 @@ AuroraLang is a statically-typed systems programming language that combines the 
 
 ---
 
-## 📦 Installation
+## 📦 Installation & Usage
 
 ### Prerequisites
 
@@ -34,17 +34,18 @@ AuroraLang is a statically-typed systems programming language that combines the 
 ### macOS (Homebrew)
 
 ```bash
-# Install LLVM
+# Install dependencies
 brew install llvm cmake
 
-# Clone repository
+# Clone and build
 git clone https://github.com/flyfishxu/AuroraLang.git
 cd AuroraLang
-
-# Build
 mkdir build && cd build
 cmake .. -DCMAKE_PREFIX_PATH="$(brew --prefix llvm)"
 make
+
+# Run your first program
+./aurora ../tests/basic/exitCode.aur
 ```
 
 ### Linux
@@ -59,6 +60,20 @@ cd AuroraLang
 mkdir build && cd build
 cmake ..
 make
+
+# Run your first program
+./aurora ../tests/basic/exitCode.aur
+```
+
+### Create Distribution (Optional)
+
+Create a portable, relocatable distribution:
+
+```bash
+cd build
+make dist
+cd ../dist
+./bin/aurora myprogram.aur
 ```
 
 ---
@@ -138,6 +153,41 @@ fn main() -> int {
     printd(factorial(5))  // Prints: 120
     return 0
 }
+```
+
+---
+
+## ⚙️ Advanced Configuration
+
+### Environment Variables
+
+Configure AuroraLang behavior with environment variables:
+
+```bash
+# Set custom sysroot location
+export AURORA_HOME=/usr/local
+
+# Add custom module search paths
+export AURORA_MODULE_PATH=/path/to/modules:/another/path
+
+./build/aurora myprogram.aur
+```
+
+### Sysroot Resolution
+
+The compiler locates standard library and runtime using this priority order:
+
+1. **`--sysroot <path>`** - Command line argument (highest priority)
+2. **`AURORA_HOME`** - Environment variable  
+3. **Executable path** - Relative to `bin/../` (auto-detected)
+4. **Compile-time path** - Default build location
+
+```bash
+# Use auto-detected sysroot (recommended)
+./build/aurora myprogram.aur
+
+# Override with custom location
+./build/aurora --sysroot /opt/aurora myprogram.aur
 ```
 
 ---

@@ -3,11 +3,13 @@
 #include "aurora/Parser.h"
 #include "aurora/CodeGen.h"
 #include "aurora/Logger.h"
+#include "aurora/Utils.h"
 #include <fstream>
 #include <sstream>
 #include <filesystem>
 #include <set>
 #include <algorithm>
+#include <cstdlib>
 
 namespace aurora {
 
@@ -15,7 +17,75 @@ namespace aurora {
 static std::set<std::string> loadedModules;
 
 // Global registry for package source directories
-static std::vector<std::string> packageSearchPaths = {".", "src", "stdlib/aurora"};
+static std::vector<std::string> packageSearchPaths;
+static std::string stdlibPath;
+static bool moduleSystemInitialized = false;
+
+void addModuleSearchPath(const std::string& path) {
+    if (!path.empty() && std::filesystem::exists(path)) {
+        packageSearchPaths.push_back(path);
+        Logger::instance().debug("Added module search path: " + path, "Modules");
+    }
+}
+
+void setStdlibPath(const std::string& path) {
+    if (std::filesystem::exists(path)) {
+        stdlibPath = path;
+        Logger::instance().debug("Set stdlib path: " + path, "Modules");
+    } else {
+        Logger::instance().warning("Stdlib path does not exist: " + path);
+    }
+}
+
+void initializeModuleSystem() {
+    if (moduleSystemInitialized) {
+        return;
+    }
+    
+    auto& logger = Logger::instance();
+    logger.debug("Initializing module system...", "Modules");
+    
+    // Clear existing paths
+    packageSearchPaths.clear();
+    
+    // Initialize sysroot first
+    initializeSysroot();
+    std::string sysroot = getSysroot();
+    logger.debug("Sysroot: " + sysroot, "Modules");
+    
+    // Standard library path: sysroot/stdlib/aurora
+    std::filesystem::path stdlibRelPath = std::filesystem::path(sysroot) / "stdlib" / "aurora";
+    if (std::filesystem::exists(stdlibRelPath)) {
+        stdlibPath = stdlibRelPath.string();
+        addModuleSearchPath(stdlibPath);
+        logger.info("Standard library: " + stdlibPath);
+    } else {
+        logger.warning("Standard library not found at: " + stdlibRelPath.string());
+    }
+    
+    // Always add current directory and "src" for user modules
+    addModuleSearchPath(".");
+    addModuleSearchPath("src");
+    
+    // Add environment variable AURORA_MODULE_PATH (for additional user paths)
+    const char* envModulePath = std::getenv("AURORA_MODULE_PATH");
+    if (envModulePath && envModulePath[0] != '\0') {
+        std::string modulePaths(envModulePath);
+        size_t pos = 0;
+        while ((pos = modulePaths.find(':')) != std::string::npos) {
+            std::string path = modulePaths.substr(0, pos);
+            addModuleSearchPath(path);
+            modulePaths.erase(0, pos + 1);
+        }
+        if (!modulePaths.empty()) {
+            addModuleSearchPath(modulePaths);
+        }
+    }
+    
+    logger.info("Module system initialized with " + std::to_string(packageSearchPaths.size()) + " search path(s)");
+    
+    moduleSystemInitialized = true;
+}
 
 std::string PackageDecl::toPath() const {
     // Convert package name to file system path
@@ -27,6 +97,11 @@ std::string PackageDecl::toPath() const {
 
 bool ImportDecl::load(const std::string& currentFile, const std::string& currentPackage) {
     auto& logger = Logger::instance();
+    
+    // Initialize module system if not already done
+    if (!moduleSystemInitialized) {
+        initializeModuleSystem();
+    }
     
     // Check if module is already loaded
     if (loadedModules.count(modulePath) > 0) {

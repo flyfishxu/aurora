@@ -34,5 +34,3 @@ private:
 
 } // namespace lsp
 } // namespace aurora
-
-

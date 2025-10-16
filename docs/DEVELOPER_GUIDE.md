@@ -503,6 +503,348 @@ If verification fails:
 
 ---
 
+## Standard Library Architecture
+
+### Design Philosophy
+
+AuroraLang's standard library follows the model of mature compiled languages (C, C++, Rust, Swift, Go):
+
+1. **Dual Library Format**: Both static (`.a`/`.lib`) and shared (`.so`/.dylib`/`.dll`) libraries
+2. **Sysroot-Based Resolution**: No hardcoded paths, flexible deployment
+3. **Separation of Concerns**:
+   - **Runtime** (`libaurora_runtime`): Low-level operations (arrays, memory)
+   - **Stdlib** (`libaurora_stdlib`): Native extensions
+   - **Aurora Source** (`.aur` files): High-level standard library
+
+### Library Build System
+
+**CMake Configuration**:
+- `BUILD_SHARED_LIBS=ON` (default): Build `.so`/`.dylib`/`.dll`
+- `BUILD_STATIC_LIBS=ON` (default): Build `.a`/`.lib`
+
+**Output**:
+```
+build/runtime/
+├── libaurora_runtime.a              # Static library
+├── libaurora_runtime.dylib          # Shared library (symlink)
+├── libaurora_runtime.0.dylib        # Version symlink
+└── libaurora_runtime.0.6.3.dylib    # Actual shared library
+
+build/stdlib/
+├── libaurora_stdlib.a
+├── libaurora_stdlib.dylib
+├── libaurora_stdlib.0.dylib
+└── libaurora_stdlib.0.6.3.dylib
+```
+
+**Versioning**: Libraries follow semantic versioning (SOVERSION for ABI compatibility)
+
+### Module Search Path Resolution
+
+AuroraLang uses a robust, sysroot-based module resolution system that works from any directory.
+
+#### Sysroot Priority Order
+
+When resolving the sysroot (system root directory), the compiler searches in this order:
+
+1. **`--sysroot` Argument** (highest priority)
+   - Command line: `aurora --sysroot /usr/local program.aur`
+   - Explicit override for deployment
+
+2. **`AURORA_HOME` Environment Variable**
+   - Example: `export AURORA_HOME=/usr/local`
+   - Useful for custom installations
+
+3. **Relative to Executable**
+   - Searches `bin/../` relative to executable
+   - Automatic for installed binaries
+
+4. **Compile-time `AURORA_SYSROOT`**
+   - Defined during build via CMake
+   - Default: `${CMAKE_SOURCE_DIR}`
+
+5. **Fallback**: Current directory (development only)
+
+#### Module Search Within Sysroot
+
+Once sysroot is determined, modules are located:
+
+1. **Standard Library**: `<sysroot>/stdlib/aurora/`
+   - Example: `import core.math` → `<sysroot>/stdlib/aurora/core/math.aur`
+
+2. **Additional Module Paths**: `AURORA_MODULE_PATH`
+   - Colon-separated list: `export AURORA_MODULE_PATH=/path1:/path2`
+   - For custom user modules
+
+3. **Local Directories**: `.` and `src/`
+   - Always included for project-local modules
+
+#### Implementation
+
+**Module System Initialization** (`compiler/src/ast/ModuleLoader.cpp`):
+
+```cpp
+void initializeModuleSystem() {
+    // Priority 1: Environment variable
+    const char* envStdlibPath = std::getenv("AURORA_STDLIB_PATH");
+    if (envStdlibPath && std::filesystem::exists(envStdlibPath)) {
+        stdlibPath = envStdlibPath;
+    }
+    
+    // Priority 2: Compile-time path
+    if (stdlibPath.empty()) {
+#ifdef AURORA_STDLIB_PATH
+        stdlibPath = AURORA_STDLIB_PATH;
+#endif
+    }
+    
+    // Priority 3: Relative to executable
+    if (stdlibPath.empty()) {
+        std::string exeDir = getExecutableDirectory();
+        std::filesystem::path relPath = 
+            std::filesystem::path(exeDir) / ".." / "stdlib" / "aurora";
+        if (std::filesystem::exists(relPath)) {
+            stdlibPath = relPath.string();
+        }
+    }
+    
+    // Add all search paths
+    addModuleSearchPath(stdlibPath);  // stdlib first
+    addModuleSearchPath(".");         // current dir
+    addModuleSearchPath("src");       // src dir
+}
+```
+
+**Executable Path Detection** (`compiler/src/utils/Utils.cpp`):
+
+```cpp
+std::string getExecutablePath() {
+#ifdef __APPLE__
+    char path[1024];
+    uint32_t size = sizeof(path);
+    _NSGetExecutablePath(path, &size);
+    return std::string(path);
+#elif defined(_WIN32)
+    char path[MAX_PATH];
+    GetModuleFileNameA(NULL, path, MAX_PATH);
+    return std::string(path);
+#else  // Linux
+    char path[1024];
+    ssize_t len = readlink("/proc/self/exe", path, sizeof(path) - 1);
+    path[len] = '\0';
+    return std::string(path);
+#endif
+}
+```
+
+### Prelude Auto-Import
+
+The **prelude** (`stdlib/aurora/core/prelude.aur`) is automatically imported in every file:
+
+```cpp
+// In main.cpp
+auto preludeImport = std::make_unique<ImportDecl>("core.prelude");
+if (!preludeImport->load(filename, currentPackage)) {
+    logger.warning("Failed to auto-load prelude");
+}
+```
+
+**Why Package-Style Import?**
+- Uses `"core.prelude"` instead of `"stdlib/aurora/core/prelude"`
+- Works with module search paths
+- Independent of working directory
+- Similar to Kotlin's implicit stdlib imports
+
+### Import Resolution Examples
+
+**Package Import** (recommended):
+```aurora
+import core.math        # → stdlib/aurora/core/math.aur
+import collections.list # → stdlib/aurora/collections/list.aur
+```
+
+**Relative Import**:
+```aurora
+import ./utils          # → ./utils.aur
+import ../common/types  # → ../common/types.aur
+```
+
+**Package Declaration**:
+```aurora
+package com.example.myapp
+
+fn main() -> int {
+    // Functions from stdlib prelude work automatically
+    println("Hello")
+    return 0
+}
+```
+
+### Testing Module Resolution
+
+```bash
+# Test from project root
+cd AuroraLang
+./build/aurora tests/stdlib/testMath.aur  # ✓ Works
+
+# Test from tests directory  
+cd tests
+../build/aurora stdlib/testMath.aur      # ✓ Works
+
+# Test from arbitrary directory
+cd /tmp
+/path/to/AuroraLang/build/aurora /path/to/test.aur  # ✓ Works
+
+# Custom stdlib location
+export AURORA_STDLIB_PATH=/custom/stdlib
+aurora myprogram.aur  # ✓ Uses custom stdlib
+```
+
+### Debugging Module Resolution
+
+Enable debug logging to see module search:
+
+```bash
+aurora --debug myprogram.aur
+```
+
+Output:
+```
+[DEBUG] [Modules] Initializing module system...
+[DEBUG] [Modules] Using compile-time stdlib path: /path/to/stdlib/aurora
+[DEBUG] [Modules] Added module search path: /path/to/stdlib/aurora
+[DEBUG] [Modules] Added module search path: .
+[INFO ] Module system initialized with 2 search path(s)
+[INFO ] Standard library: /path/to/stdlib/aurora
+```
+
+### Common Issues and Solutions
+
+**Issue**: `Module file not found: core.prelude`
+
+**Solution**:
+1. Check stdlib path exists:
+   ```bash
+   ls $AURORA_STDLIB_PATH  # or
+   ls /path/to/AuroraLang/stdlib/aurora
+   ```
+
+2. Verify with debug flag:
+   ```bash
+   aurora --debug program.aur | grep stdlib
+   ```
+
+3. Set explicit path if needed:
+   ```bash
+   export AURORA_STDLIB_PATH=/correct/path/to/stdlib/aurora
+   ```
+
+**Issue**: Import works from root but not from subdirectory
+
+**Solution**: This should no longer happen with sysroot! The system uses absolute paths. If it does:
+1. Rebuild to pick up latest module system:
+   ```bash
+   cd build && cmake .. && make
+   ```
+
+2. Verify sysroot is resolved correctly:
+   ```bash
+   aurora --debug program.aur | grep Sysroot
+   ```
+
+### Library Deployment
+
+#### Option 1: Portable Distribution (Recommended)
+
+Create a self-contained package that works anywhere:
+
+```bash
+# Build distribution
+cd build
+make dist
+
+# Distribution created in: ../dist/
+# Copy to any location:
+cp -r ../dist /opt/aurora
+cd /opt/aurora
+./bin/aurora program.aur  # Auto-detects sysroot!
+```
+
+**Distribution Structure**:
+```
+dist/
+├── README.txt                    # Usage instructions
+├── bin/
+│   └── aurora                    # Compiler executable
+├── lib/
+│   ├── libaurora_runtime.a       # Static libraries
+│   ├── libaurora_runtime.dylib   # Dynamic libraries
+│   ├── libaurora_stdlib.a
+│   └── libaurora_stdlib.dylib
+├── stdlib/
+│   └── aurora/                   # Aurora source stdlib
+│       ├── core/
+│       ├── collections/
+│       ├── math/
+│       └── string/
+└── include/                      # C/C++ interop headers
+    ├── aurora_runtime.h
+    └── aurorax/
+```
+
+**Benefits**:
+- ✅ No installation required
+- ✅ Copy to USB drive, Docker container, anywhere
+- ✅ Multiple versions side-by-side
+- ✅ Automatic sysroot detection from `bin/` location
+
+#### Option 2: System Installation
+
+Install to system paths (requires sudo):
+
+```bash
+cd build
+sudo cmake --install . --prefix /usr/local
+```
+
+**Installed Layout**:
+```
+/usr/local/
+├── bin/aurora
+├── lib/
+│   ├── libaurora_runtime.{a,so}
+│   ├── libaurora_stdlib.{a,so}
+│   └── aurora/stdlib/
+└── include/
+```
+
+**Setup**:
+```bash
+export PATH="/usr/local/bin:$PATH"
+export AURORA_HOME="/usr/local"
+aurora program.aur
+```
+
+#### Runtime Linking Options
+
+- **Static linking** (default): Everything bundled in executable
+- **Dynamic linking**: Requires libraries in system path
+  - Linux: `LD_LIBRARY_PATH`
+  - macOS: `DYLD_LIBRARY_PATH`
+  - Windows: `PATH`
+
+#### Comparison: build/ vs dist/ vs install
+
+| Aspect | `build/` | `dist/` | System Install |
+|--------|----------|---------|----------------|
+| Purpose | Development | Distribution | System-wide |
+| Portable | ❌ | ✅ | ❌ |
+| Requires Build | ✅ | ❌ | ❌ |
+| Sudo Needed | ❌ | ❌ | ✅ |
+| Best For | Dev/testing | Deployment | Production servers |
+
+---
+
 ## Contributing Guidelines
 
 ### Code Style

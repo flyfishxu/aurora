@@ -222,5 +222,3 @@ json LSPHandlers::handleRangeFormatting(const json& params) {
 
 } // namespace lsp
 } // namespace aurora
-
-

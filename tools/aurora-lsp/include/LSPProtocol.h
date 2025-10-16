@@ -25,5 +25,3 @@ public:
 
 } // namespace lsp
 } // namespace aurora
-
-

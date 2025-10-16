@@ -140,5 +140,3 @@ json LSPProtocol::completionItemToLSP(const CompletionItem& item) {
 
 } // namespace lsp
 } // namespace aurora
-
-

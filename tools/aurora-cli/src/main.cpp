@@ -6,6 +6,7 @@
 #include "aurora/Diagnostic.h"
 #include "aurora/Logger.h"
 #include "aurora/CrashHandler.h"
+#include "aurora/Utils.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -97,6 +98,9 @@ int compileAndRun(const std::string& source, const std::string& filename, bool e
     diag.setSourceCode(source);
     diag.setFilename(filename);
     
+    // Initialize module system before any compilation
+    initializeModuleSystem();
+    
     try {
         logger.info("Starting compilation...");
         logger.debug("Source file: " + filename, "Compiler");
@@ -131,7 +135,7 @@ int compileAndRun(const std::string& source, const std::string& filename, bool e
         
         // Auto-import prelude (like Kotlin's stdlib)
         logger.phaseStart("Prelude loading");
-        auto preludeImport = std::make_unique<ImportDecl>("stdlib/aurora/core/prelude");
+        auto preludeImport = std::make_unique<ImportDecl>("core.prelude");
         logger.debug("Auto-loading prelude...", "Modules");
         if (!preludeImport->load(filename, currentPackage)) {
             logger.warning("Failed to auto-load prelude - stdlib functions may not be available");
@@ -295,6 +299,7 @@ void printUsage(const char* prog) {
     std::cerr << "  --debug                 Enable debug mode (same as --log-level debug)\n";
     std::cerr << "  --trace                 Enable trace mode (most verbose)\n";
     std::cerr << "  --log-level <level>     Set log level: trace|debug|info|warn|error|off\n";
+    std::cerr << "  --sysroot <path>        Set system root directory\n";
     std::cerr << "  --lex                   Show lexer tokens only\n";
     std::cerr << "  --emit-llvm             Emit LLVM IR to file (output.ll)\n";
     std::cerr << "  -o <file>               Specify output file for --emit-llvm\n";
@@ -306,11 +311,14 @@ void printUsage(const char* prog) {
     std::cerr << "  warn   - Show only warnings and errors\n";
     std::cerr << "  error  - Show only errors\n";
     std::cerr << "  off    - Suppress all log messages (default)\n";
+    std::cerr << "\nSystem Root:\n";
+    std::cerr << "  Priority: --sysroot > AURORA_HOME env > exe/../ > compile-time\n";
+    std::cerr << "  Stdlib location: <sysroot>/stdlib/aurora/\n";
     std::cerr << "\nExamples:\n";
     std::cerr << "  " << prog << " program.aur                     # Compile and run\n";
     std::cerr << "  " << prog << " --debug program.aur             # Compile with debug info\n";
     std::cerr << "  " << prog << " --trace program.aur             # Most verbose output\n";
-    std::cerr << "  " << prog << " --log-level warn program.aur    # Only show warnings/errors\n";
+    std::cerr << "  " << prog << " --sysroot /usr/local program.aur\n";
     std::cerr << "  " << prog << " --emit-llvm program.aur         # Generate LLVM IR\n";
     std::cerr << "  " << prog << " --emit-llvm -o out.ll program.aur\n";
 }
@@ -326,6 +334,7 @@ int main(int argc, char** argv) {
     
     // Parse command line arguments
     std::string filename;
+    std::string sysroot_arg;
     bool lex_only = false;
     bool emit_llvm = false;
     bool type_demo = false;
@@ -365,6 +374,13 @@ int main(int argc, char** argv) {
                 std::cerr << "Error: --log-level requires an argument\n";
                 return 1;
             }
+        } else if (arg == "--sysroot") {
+            if (i + 1 < argc) {
+                sysroot_arg = argv[++i];
+            } else {
+                std::cerr << "Error: --sysroot requires an argument\n";
+                return 1;
+            }
         } else if (arg == "--lex") {
             lex_only = true;
         } else if (arg == "--emit-llvm") {
@@ -385,6 +401,11 @@ int main(int argc, char** argv) {
             printUsage(argv[0]);
             return 1;
         }
+    }
+    
+    // Set sysroot if specified
+    if (!sysroot_arg.empty()) {
+        setSysroot(sysroot_arg);
     }
     
     if (type_demo) {

@@ -16,11 +16,25 @@ set(AURORA_COMPILER_SOURCES
   src/diagnostic/Diagnostic.cpp
   src/logger/Logger.cpp
   src/utils/CrashHandler.cpp
+  src/utils/Utils.cpp
   src/core/LanguageCore.cpp
 )
 
 # Create compiler library
 add_library(aurora_compiler STATIC ${AURORA_COMPILER_SOURCES})
+
+# Define sysroot at compile time
+# In development: sysroot is the project root
+# After install: sysroot is the install prefix
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(AURORA_SYSROOT "${CMAKE_SOURCE_DIR}")
+else()
+  set(AURORA_SYSROOT "${CMAKE_INSTALL_PREFIX}")
+endif()
+
+target_compile_definitions(aurora_compiler PRIVATE
+  AURORA_SYSROOT="${AURORA_SYSROOT}"
+)
 
 # Include directories for compiler
 target_include_directories(aurora_compiler PUBLIC
